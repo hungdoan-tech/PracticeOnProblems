@@ -10,7 +10,7 @@ import java.util.Set;
 public class ValidAnagram {
 
     public static void main(String[] args) {
-        String s = "anagram", t = "nagaram";
+        String s = "aa", t = "bb";
         System.out.println(isAnagram(s, t));
     }
 
@@ -28,33 +28,20 @@ public class ValidAnagram {
             return false;
         }
 
-        Map<Character, Integer> charctToCounting = new HashMap<>();
+        Set<Character> set = new HashSet<>();
         for(int index = 0, length = s.length(); index < length; index++){
 
             Character charct = s.charAt(index);
-            charctToCounting.put(charct,
-                                 charctToCounting.getOrDefault(charct, 0) + 1);
+            set.add(charct);
         }
 
         for(int index = 0, length = s.length(); index < length; index++) {
 
             Character charct = t.charAt(index);
-            Integer countingOfChart = charctToCounting.get(charct);
-            if(countingOfChart == null){
-                return false;
-            }
-
-            if (countingOfChart > 1) {
-
-                charctToCounting.put(charct,
-                                     countingOfChart - 1);
-                continue;
-            }
-
-            charctToCounting.remove(charct);
+            set.remove(charct);
         }
 
-        if(charctToCounting.isEmpty()){
+        if(set.isEmpty()){
             return true;
         }
 
