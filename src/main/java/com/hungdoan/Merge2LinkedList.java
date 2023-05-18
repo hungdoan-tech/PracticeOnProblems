@@ -1,15 +1,6 @@
 package com.hungdoan;
 
-import org.w3c.dom.NodeList;
-
-/**
- * Definition for singly-linked list.
- */
-class ListNode {
-    int val;
-    ListNode next;
-    public ListNode(int value) { val = value; }
-}
+import com.hungdoan.support.ListNode;
 
 public class Merge2LinkedList {
 
