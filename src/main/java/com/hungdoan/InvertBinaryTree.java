@@ -1,9 +1,6 @@
 package com.hungdoan;
 
 import com.hungdoan.support.TreeNode;
-import sun.reflect.generics.tree.Tree;
-
-
 
 public class InvertBinaryTree {
 

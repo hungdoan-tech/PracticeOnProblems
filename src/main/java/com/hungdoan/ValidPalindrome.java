@@ -1,7 +1,5 @@
 package com.hungdoan;
 
-import java.util.Stack;
-
 public class ValidPalindrome {
 
     public static void main(String[] args) {
