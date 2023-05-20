@@ -1,6 +1,6 @@
 package com.hungdoan;
 
-import com.hungdoan.support.BinaryTree;
+import com.hungdoan.support.BinarySearchTree;
 import com.hungdoan.support.TreeNode;
 
 public class LowestCommonAncestorOfABinarySearchTree {
@@ -8,7 +8,7 @@ public class LowestCommonAncestorOfABinarySearchTree {
     public static void main(String[] args) {
         int[] input = {5, 3, 6, 2, 4, -1, -1, 1};
 
-        BinaryTree tree = new BinaryTree();
+        BinarySearchTree tree = new BinarySearchTree();
         for (int num : input) {
             tree.insert(num);
         }

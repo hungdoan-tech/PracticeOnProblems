@@ -1,6 +1,6 @@
 package com.hungdoan.support;
 
-public class BinaryTree {
+public class BinarySearchTree {
 
     public TreeNode root;
 
