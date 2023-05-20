@@ -7,6 +7,15 @@ public class BinarySearch {
         System.out.println(search(nums, 2));
     }
 
+    /**
+     * Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
+     * <p>
+     * You must write an algorithm with O(log n) runtime complexity.
+     *
+     * @param nums
+     * @param target
+     * @return
+     */
     public static int search(int[] nums, int target) {
         return performSearch(nums, target, 0, nums.length - 1);
     }
