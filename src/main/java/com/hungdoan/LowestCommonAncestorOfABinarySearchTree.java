@@ -13,8 +13,12 @@ public class LowestCommonAncestorOfABinarySearchTree {
             tree.insert(num);
         }
 
-        TreeNode search = tree.search(2);
+        TreeNode root = tree.root;
+        TreeNode node1 = tree.search(1);
+        TreeNode node4 = tree.search(4);
 
+        TreeNode treeNode = lowestCommonAncestor(root, node1, node4);
+        System.out.println();
     }
 
     /**
@@ -37,6 +41,7 @@ public class LowestCommonAncestorOfABinarySearchTree {
      * @return
      */
     public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
         if (p.left == q || p.right == q) {
             return p;
         }
@@ -44,10 +49,11 @@ public class LowestCommonAncestorOfABinarySearchTree {
         if (q.left == p || q.right == p) {
             return q;
         }
-        return null;
+        return find(root, p, q);
     }
 
     private static TreeNode find(TreeNode node, TreeNode p, TreeNode q) {
+
         if (node == null) {
             return null;
         }
@@ -57,10 +63,21 @@ public class LowestCommonAncestorOfABinarySearchTree {
         }
 
         TreeNode leftNode = find(node.left, p, q);
+
         TreeNode rightNode = find(node.right, p, q);
-        if (leftNode == p || rightNode == q || leftNode == q || rightNode == p) {
+
+        if (leftNode == p && rightNode == q || leftNode == q && rightNode == p) {
             return node;
         }
-        return null;
+
+        if (leftNode == null && rightNode == null) {
+            return null;
+        }
+
+        if (leftNode != null && rightNode == null) {
+            return leftNode;
+        }
+
+        return rightNode;
     }
 }
