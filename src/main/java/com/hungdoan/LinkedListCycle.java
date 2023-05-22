@@ -24,10 +24,9 @@ public class LinkedListCycle {
      */
     public static boolean hasCycle(ListNode head) {
         ListNode runner = head;
-        boolean isFaced = false;
         Set<ListNode> setOfNodes = new HashSet<>();
 
-        while (isFaced == false) {
+        while (true) {
 
             if (runner == null) {
                 return false;
@@ -40,7 +39,5 @@ public class LinkedListCycle {
             setOfNodes.add(runner);
             runner = runner.next;
         }
-
-        return false;
     }
 }
