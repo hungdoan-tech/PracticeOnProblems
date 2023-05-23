@@ -2,6 +2,8 @@ package com.hungdoan;
 
 public class FirstBadVersion {
 
+    private static int badVersionIndex;
+
     /**
      * You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check.
      * Since each version is developed based on the previous version, all the versions after a bad version are also bad.
@@ -14,7 +16,7 @@ public class FirstBadVersion {
      * @param n
      * @return
      */
-    public int firstBadVersion(int n) {
+    public static int firstBadVersion(int n) {
         return performSearch(0, n);
     }
 
@@ -62,7 +64,15 @@ public class FirstBadVersion {
     }
 
     private static boolean isBadVersion(int index) {
-        // simulation
+        if (FirstBadVersion.badVersionIndex == index) {
+            return true;
+        }
         return false;
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        FirstBadVersion.badVersionIndex = 4;
+        System.out.println(firstBadVersion(n));
     }
 }
