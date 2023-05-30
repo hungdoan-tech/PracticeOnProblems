@@ -23,4 +23,10 @@ public class LinkedList {
         this.tail = newNode;
         return tail;
     }
+
+    public void addAll(int[] arr) {
+        for (int num : arr) {
+            this.add(num);
+        }
+    }
 }
