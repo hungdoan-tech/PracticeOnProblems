@@ -12,6 +12,14 @@ public class MiddleOfTheLinkedList {
         System.out.println(middleNode(linkedList.head));
     }
 
+    /**
+     * Given the head of a singly linked list, return the middle node of the linked list.
+     * <p>
+     * If there are two middle nodes, return the second middle node.
+     *
+     * @param head
+     * @return
+     */
     public static ListNode middleNode(ListNode head) {
 
         ListNode slowPointer = head;
