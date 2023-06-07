@@ -42,4 +42,30 @@ public class SetMismatch {
 
         return new int[]{twiceNum, missingNum};
     }
+
+    /**
+     * We calculate the sum of all numbers and the sum of squares. From it we subtract the actual sum.
+     * If 'a' is repeated character and 'b' is missing.
+     * We get sum = a-b and square_sum = a^2 - b^2.
+     * using these equations we find a and b.
+     *
+     * @param nums
+     * @return
+     */
+    public static int[] findErrorNums_BestSolution(int[] nums) {
+        int sum = 0;
+        int sqsum = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i] - (i + 1);
+            sqsum += nums[i] * nums[i] - (i + 1) * (i + 1);
+        }
+
+        int diff = sum;
+        sum = sqsum / sum;
+        int a[] = new int[2];
+        a[0] = (sum + diff) / 2;
+        a[1] = (sum - a[0]);
+        return a;
+    }
 }
