@@ -3,34 +3,39 @@ package com.hungdoan;
 import com.hungdoan.support.LinkedList;
 import com.hungdoan.support.ListNode;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class PalindromeLinkedList {
+
+    public static ListNode tempHead;
 
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
-        linkedList.addAll(new int[]{1, 2, 1});
+        linkedList.addAll(new int[]{1, 2, 2, 1});
+        tempHead = linkedList.head;
         System.out.println(isPalindrome(linkedList.head));
     }
 
+    /**
+     * Given the head of a singly linked list, return true if it is a
+     * palindrome or false otherwise.
+     *
+     * @param head
+     * @return
+     */
     public static boolean isPalindrome(ListNode head) {
-        if (head.next == null) {
+        
+        if (head == null) {
             return true;
         }
 
-        Set<Integer> set = new HashSet<>();
-        ListNode runner = head;
-        while (runner != null) {
-            if (set.contains(runner.val)) {
-                set.remove(runner.val);
-                runner = runner.next;
-                continue;
-            }
-            set.add(runner.val);
-            runner = runner.next;
+        if (isPalindrome(head.next) == false) {
+            return false;
         }
 
-        return set.isEmpty();
+        if (head.val != tempHead.val) {
+            return false;
+        }
+
+        tempHead = tempHead.next;
+        return true;
     }
 }
