@@ -14,6 +14,15 @@ public class SameTree {
         System.out.println(isSameTree(root, root2));
     }
 
+    /**
+     * Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+     * <p>
+     * Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+     *
+     * @param p
+     * @param q
+     * @return
+     */
     public static boolean isSameTree(TreeNode p, TreeNode q) {
         if (p == null && q == null) {
             return true;
@@ -30,9 +39,9 @@ public class SameTree {
         }
 
         if (p.val == q.val) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 }
