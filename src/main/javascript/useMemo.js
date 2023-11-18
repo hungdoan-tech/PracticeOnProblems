@@ -1,3 +1,13 @@
+/**
+ * Kind of a caching approach when invoking a function
+ * with a same args - memo will noop, return the cached one
+ * rather than performing computing again
+ * Note: currently just support primitives
+ *
+ * @param func
+ * @param resolver - a function that define the way to construct a caching key from args
+ * @returns {(function(...[*]): (any))|*}
+ */
 function useMemo(func, resolver = (...args) => args.join('_')) {
     const cache = new Map();
 

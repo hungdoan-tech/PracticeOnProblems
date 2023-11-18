@@ -1,8 +1,12 @@
 /**
- * @param {(...args:any[]) => any} func
- * @param {number} wait
- * @param option
- * @returns {(...args:any[]) => any}
+ * Throttling approach when invoking a function
+ * we define a way that prevents invoking function too many times in a specific period
+ * over suit for the rate limiting
+ *
+ * @param {(...args: any[]) => any} func
+ * @param {Number} wait
+ * @param {{trailing: boolean, leading: boolean}} option
+ * @returns
  */
 function useThrottle(func, wait, option = {leading: true, trailing: true}) {
     let isCooling = false;
@@ -33,7 +37,7 @@ function useThrottle(func, wait, option = {leading: true, trailing: true}) {
                 func.apply(this, args);
                 lastArgs = null;
             }
-            
+
             isCooling = true;
             coolingFunction(func, wait);
         }
