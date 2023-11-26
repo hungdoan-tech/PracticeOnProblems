@@ -9,16 +9,25 @@
  * @returns
  */
 function useThrottle(func, wait, option = {leading: true, trailing: true}) {
+    if (!func || typeof func !== 'function') {
+        throw new Error("The provided function is not valid");
+    }
+
+    if (!wait || typeof wait !== 'number') {
+        throw new Error("The provided waiting time is not valid");
+    }
+
     let isCooling = false;
     let lastArgs = null;
     const {leading, trailing} = option;
 
     function coolingFunction() {
         setTimeout(() => {
-            if(trailing === true && lastArgs !== null){
+            if (trailing === true && lastArgs !== null) {
                 func.apply(this, lastArgs);
                 lastArgs = null;
-                coolingFunction(func, wait);
+                isCooling = true;
+                coolingFunction();
                 return;
             }
 
@@ -26,14 +35,13 @@ function useThrottle(func, wait, option = {leading: true, trailing: true}) {
         }, wait);
     }
 
-    return function(...args) {
+    return function (...args) {
 
         if (isCooling) {
             lastArgs = args;
 
         } else {
-            //able to fire
-            if(leading === true) {
+            if (leading === true) {
                 func.apply(this, args);
                 lastArgs = null;
             }
@@ -49,7 +57,7 @@ const run = (input) => {
         console.log(`${arg} ${new Date().getMilliseconds()}`);
     }
 
-    const throttled = useThrottle(func, 3);
+    const throttled = useThrottle(func, 5);
     input.forEach((call) => {
         const [arg, time] = call.split('@')
         setTimeout(() => throttled(arg), time);

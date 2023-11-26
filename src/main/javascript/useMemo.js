@@ -9,6 +9,13 @@
  * @returns {(function(...[*]): (any))|*}
  */
 function useMemo(func, resolver = (...args) => args.join('_')) {
+    if (!func || typeof func !== 'function') {
+        throw new Error("The provided function is not valid");
+    }
+    if (!resolver || typeof resolver !== 'function') {
+        throw new Error("The provided resolver is not valid");
+    }
+
     const cache = new Map();
 
     return function (...args) {

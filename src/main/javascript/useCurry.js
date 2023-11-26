@@ -7,9 +7,10 @@
  * @returns { (...args: any[]) => any }
  */
 function useCurry(fn) {
-
+    if (!fn || typeof fn !== 'function') {
+        throw new Error("The provided function is not valid");
+    }
     return function curried(...args) {
-        console.log(this);
         if (args.length >= fn.length) {
             return fn.call(this, ...args);
         }

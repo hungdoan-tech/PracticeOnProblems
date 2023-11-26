@@ -18,7 +18,9 @@ function useDebounce(func, wait) {
     let timerId = null;
 
     return function (...args) {
-        
+        date = new Date();
+        console.log(`try ${args} at @${date.getSeconds()}@${date.getMilliseconds()}`)
+
         if(timerId){
             clearTimeout(timerId);
         }
@@ -39,13 +41,9 @@ const run = (input) => {
         console.log(calls)
     }
 
-    const debounced = useDebounce(func, 3)
+    const debounced = useDebounce(func, 5)
     input.forEach((call) => {
         const [arg, time] = call.split('@')
-        
-        date = new Date();
-        console.log(`try ${arg} at @${date.getSeconds()}@${date.getMilliseconds()}`)
-
         setTimeout(() => debounced(arg), time)
     })
     return calls
