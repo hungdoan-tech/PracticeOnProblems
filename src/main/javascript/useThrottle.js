@@ -8,7 +8,7 @@
  * @param {{trailing: boolean, leading: boolean}} option
  * @returns
  */
-function useThrottle(func, wait, option = {leading: true, trailing: true}) {
+function useThrottle(func, wait, option = { leading: true, trailing: true }) {
     if (!func || typeof func !== 'function') {
         throw new Error("The provided function is not valid");
     }
@@ -19,7 +19,7 @@ function useThrottle(func, wait, option = {leading: true, trailing: true}) {
 
     let isCooling = false;
     let lastArgs = null;
-    const {leading, trailing} = option;
+    const { leading, trailing } = option;
 
     function coolingFunction() {
         setTimeout(() => {
@@ -55,13 +55,13 @@ function useThrottle(func, wait, option = {leading: true, trailing: true}) {
 const run = (input) => {
     const func = (arg) => {
         console.log(`${arg} ${new Date().getMilliseconds()}`);
-    }
+    };
 
     const throttled = useThrottle(func, 5);
     input.forEach((call) => {
-        const [arg, time] = call.split('@')
+        const [arg, time] = call.split('@');
         setTimeout(() => throttled(arg), time);
     });
-}
+};
 
 run(['A@0', 'B@2', 'C@3']);

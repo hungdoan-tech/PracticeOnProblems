@@ -15,12 +15,12 @@ function useCurry(fn) {
             return fn.call(this, ...args);
         }
         return curried.bind(this, ...args);
-    }
+    };
 }
 
 const join = (a, b, c) => {
     return `${a}_${b}_${c}`;
-}
+};
 
 const curriedJoin = useCurry(join);
 
@@ -29,6 +29,6 @@ console.log(curriedJoin(1, 2, 3));
 
 console.log(curriedJoin(1)(2, 3));
 
-console.log(curriedJoin(1, 2)(3))
+console.log(curriedJoin(1, 2)(3));
 
-console.log(curriedJoin(1)(2)(3))
+console.log(curriedJoin(1)(2)(3));

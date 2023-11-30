@@ -2,7 +2,7 @@
  * Create a unique symbol - act like a global symbol to avoid duplicating the properties flat of the Array.prototype
  */
 flat = Symbol('flat function');
-Array.prototype[flat] = performFlat
+Array.prototype[flat] = performFlat;
 
 /**
  * Flattening the array until reach the provided max depth
@@ -42,11 +42,11 @@ function performFlat(depth = 1) {
 
 const arr = [1, [2], [3, [4, [5]]]];
 
-console.log(arr[flat]())
+console.log(arr[flat]());
 // // [1, 2, 3, [4]]
 
-console.log(arr[flat](1))
+console.log(arr[flat](1));
 // // [1, 2, 3, [4]]
 
-console.log(arr[flat](2))
+console.log(arr[flat](2));
 // // [1, 2, 3, 4]

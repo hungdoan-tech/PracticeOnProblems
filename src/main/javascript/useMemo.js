@@ -34,16 +34,16 @@ function useMemo(func, resolver = (...args) => args.join('_')) {
     };
 }
 
-function test(){
-    function increaseOne(b){
-        return b + 1
+function test() {
+    function increaseOne(b) {
+        return b + 1;
     }
 
-    const memoFunction = useMemo(increaseOne)
+    const memoFunction = useMemo(increaseOne);
 
     console.log(memoFunction(1));
     console.log(memoFunction(5));
     console.log(memoFunction(1));
 }
 
-test()
+test();

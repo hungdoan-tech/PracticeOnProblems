@@ -19,9 +19,9 @@ function useDebounce(func, wait) {
 
     return function (...args) {
         date = new Date();
-        console.log(`try ${args} at @${date.getSeconds()}@${date.getMilliseconds()}`)
+        console.log(`try ${args} at @${date.getSeconds()}@${date.getMilliseconds()}`);
 
-        if(timerId){
+        if (timerId) {
             clearTimeout(timerId);
         }
 
@@ -33,20 +33,20 @@ function useDebounce(func, wait) {
 
 
 const run = (input) => {
-    const calls = []
+    const calls = [];
 
     const func = (arg) => {
         date = new Date();
-        calls.push(`Run ${arg} att ${date.getSeconds()}@${date.getMilliseconds()}`)
-        console.log(calls)
-    }
+        calls.push(`Run ${arg} att ${date.getSeconds()}@${date.getMilliseconds()}`);
+        console.log(calls);
+    };
 
-    const debounced = useDebounce(func, 5)
+    const debounced = useDebounce(func, 5);
     input.forEach((call) => {
-        const [arg, time] = call.split('@')
-        setTimeout(() => debounced(arg), time)
-    })
-    return calls
-}
+        const [arg, time] = call.split('@');
+        setTimeout(() => debounced(arg), time);
+    });
+    return calls;
+};
 
-run(['A@0', 'B@2', 'C@3'])
+run(['A@0', 'B@2', 'C@3']);
