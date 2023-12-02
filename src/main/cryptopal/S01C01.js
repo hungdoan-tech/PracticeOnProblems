@@ -9,6 +9,7 @@
 //
 // Cryptopals Rule
 // Always operate on raw bytes, never on encoded strings. Only use hex and base64 for pretty-printing.
+import { assertEquals, tests } from "../javascript/TinyUTLib.js";
 
 const b64EncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -65,7 +66,13 @@ function hexToBase64(hexData) {
     return b64Data;
 }
 
-// Example usage
-const result = hexToBase64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d");
-
-console.log(result);
+function perform() {
+    tests({
+        'giveMessageInHex_convertToBase64_expectCorrectEncodeBase64Message': function () {
+            const messageInHex = '49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d';
+            const result = hexToBase64(messageInHex);
+            assertEquals('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t', result);
+            console.log(`From message in hex ${messageInHex} - we convert it to base64 as ${result}`);
+        }
+    });
+}

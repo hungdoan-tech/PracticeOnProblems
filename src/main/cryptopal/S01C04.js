@@ -1,5 +1,6 @@
 // One of the 60-character strings in this file S01C04.txt has been encrypted by single-character XOR.
 // Find it.
+import { assertEquals, tests } from "../javascript/TinyUTLib.js";
 import { convertHexSequenceToByteArray, bruteForceDecryptByXORSingleChar } from "./S01C03.js";
 import fs from 'fs';
 
@@ -29,7 +30,12 @@ async function findingXORSingleCharInFiles(filePath) {
     return finalResult;
 }
 
-async function perform() {
-    const { key, score, clearMessage, encryptedMessage } = await findingXORSingleCharInFiles("./src/main/cryptopal/S01C04.txt");
-    console.log(`With key ${key} - Score ${score}\nFrom Cipher Message: ${encryptedMessage} to Clear Message : ${clearMessage}`);
+function perform() {
+    tests({
+        "giveAFileContainAllPossibleEncryptedMessage_bruteForceDecryptByXORSingleCharAllLines_expectCorrectDecryptedMessage": async function () {
+            const { key, score, clearMessage, encryptedMessage } = await findingXORSingleCharInFiles("./src/main/cryptopal/S01C04.txt");
+            assertEquals(`Now that the party is jumping\n`, clearMessage);
+            console.log(`With key ${key} - Score ${score}\nFrom Cipher Message: ${encryptedMessage} to Clear Message : ${clearMessage}`);
+        }
+    });
 }

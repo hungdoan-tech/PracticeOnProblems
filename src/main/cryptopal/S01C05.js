@@ -1,3 +1,4 @@
+import { tests, assertEquals } from "../javascript/TinyUTLib.js";
 // Implement repeating-key XOR
 // Here is the opening stanza of an important work of the English language:
 
@@ -56,11 +57,19 @@ function repeatingKeyXOR(clearMessage, key) {
     return encryptedMessage;
 }
 
-const clearMessage = `Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal`;
-const key = 'ICE';
-const encryptedMessageByteArr = repeatingKeyXOR(clearMessage, key);
-const encryptedMessage = byteArrToHexChars(encryptedMessageByteArr);
-console.log(`Fromt the clear message:
-${clearMessage}
-\nEncrypt it with the repeating XOR key approach - key = ${key}
-\nThe encrypt message in hex would be ${encryptedMessage}`);
+function perform() {
+    tests({
+        'giveUTF16CharsClearMessageAndKey_encryptUsingSimpleCipherRepeatingKeyXOR_expectCorrectEncryptedMessage': function () {
+            const clearMessage = `Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal`;
+            const key = 'ICE';
+            const encryptedMessageByteArr = repeatingKeyXOR(clearMessage, key);
+            const encryptedMessage = byteArrToHexChars(encryptedMessageByteArr);
+
+            assertEquals('0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f', encryptedMessage);
+
+            console.log(`Fromt the clear message: ${clearMessage}
+            \nEncrypt it with the repeating XOR key approach - key = ${key}
+            \nThe encrypt message in hex would be ${encryptedMessage}`);
+        }
+    });
+}

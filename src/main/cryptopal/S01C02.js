@@ -10,11 +10,9 @@
 // ... should produce:
 
 // 746865206b696420646f6e277420706c6179
+import { assertEquals, tests } from "../javascript/TinyUTLib.js";
 
 function decodeAndXOR(firstBuffer, secondBuffer) {
-
-    const firstCharArr = firstBuffer.split('');
-    const secondCharArr = secondBuffer.split('');
 
     if (firstBuffer.length !== secondBuffer.length) {
         throw Error('Illegal Argument Exception - two input buffers are not equal');
@@ -31,4 +29,14 @@ function decodeAndXOR(firstBuffer, secondBuffer) {
     return finalResult;
 }
 
-decodeAndXOR('1c0111001f010100061a024b53535009181c', '686974207468652062756c6c277320657965');
+function perform() {
+    tests({
+        'give2MessageInHex_xorTheseTwoMessage_expectCorrectXORResult': function () {
+            const firstBuffer = '1c0111001f010100061a024b53535009181c';
+            const secondBuffer = '686974207468652062756c6c277320657965';
+            const xorResult = decodeAndXOR(firstBuffer, secondBuffer);
+            assertEquals('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t', xorResult);
+            console.log(`From 2 message in hex ${firstBuffer} and ${secondBuffer} - we XOR it and the result is ${xorResult}`);
+        }
+    });
+}
