@@ -16,11 +16,11 @@ const CHARACTER_FREQ = {
 
 /**
  * Convert a String containing all chars in base hex to an array of Byte
- * @param {string} hexSequences Each char in this String should be in base hexadecimal 
+ * @param {string} hexMessage Each char in this String should be in base hexadecimal 
  * @returns {Uint8Array} an Array of byte
  */
-export function convertHexSequenceToByteArray(hexSequences) {
-    const charArr = hexSequences.split('');
+export function convertHexSequenceToByteArr(hexMessage) {
+    const charArr = hexMessage.split('');
     const byteArr = new Uint8Array(charArr.length / 2);
     for (let i = 0; i < charArr.length; i += 2) {
         let bits = parseInt(charArr[i], 16);
@@ -29,7 +29,7 @@ export function convertHexSequenceToByteArray(hexSequences) {
     return byteArr;
 }
 
-function calculateEngFrequencyScore(clearCandidateByteArr) {
+function calculateEnglishFrequencyScore(clearCandidateByteArr) {
     let candidateScore = 0;
     let candidateMessage = '';
 
@@ -45,7 +45,7 @@ function calculateEngFrequencyScore(clearCandidateByteArr) {
     };
 }
 
-function XORBackToFindOriginalBytes(cipherByteArr, candidateKeyByte) {
+function xorWithKeyBackToFindOriginalBytes(cipherByteArr, candidateKeyByte) {
     let clearCandidateByteArr = new Uint8Array(cipherByteArr.length);
 
     for (let index = 0; index < cipherByteArr.length; index++) {
@@ -63,7 +63,7 @@ function XORBackToFindOriginalBytes(cipherByteArr, candidateKeyByte) {
  * @param {Uint8Array} cipherByteArr The cipher message in type of a array of byte
  * @returns {String} Clear message
  */
-export function bruteForceDecryptByXORSingleChar(cipherByteArr) {
+export function bruteForceDecryptXORSingleCharCipher(cipherByteArr) {
     let finalDecyptedResult = {
         key: -1,
         score: -1,
@@ -71,8 +71,8 @@ export function bruteForceDecryptByXORSingleChar(cipherByteArr) {
     };
 
     for (let candidateKeyByte = 0; candidateKeyByte < Math.pow(2, 8); candidateKeyByte++) {
-        const clearCandidateByteArr = XORBackToFindOriginalBytes(cipherByteArr, candidateKeyByte);
-        const { candidateScore, candidateMessage } = calculateEngFrequencyScore(clearCandidateByteArr);
+        const clearCandidateByteArr = xorWithKeyBackToFindOriginalBytes(cipherByteArr, candidateKeyByte);
+        const { candidateScore, candidateMessage } = calculateEnglishFrequencyScore(clearCandidateByteArr);
 
         if (candidateScore > finalDecyptedResult.score) {
             finalDecyptedResult = {

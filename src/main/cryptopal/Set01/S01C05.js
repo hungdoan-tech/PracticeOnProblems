@@ -13,7 +13,7 @@
 // a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f
 // Encrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mail. Encrypt your password file. Your .sig file. Get a feel for it. I promise, we aren't wasting your time with this.
 
-export function byteArrToHexChars(clearMessageInByteArr) {
+export function convertByteArrToHexSequence(clearMessageInByteArr) {
     const hexChars = '0123456789abcdef';
     let clearMessageInHex = '';
     for (let index = 0; index < clearMessageInByteArr.length; index++) {
@@ -25,8 +25,8 @@ export function byteArrToHexChars(clearMessageInByteArr) {
     return clearMessageInHex;
 }
 
-export function convertUTF8CharSequenceToByteArray(clearMessage) {
-    const charArr = clearMessage.split('');
+export function convertUTF8SequenceToByteArr(utf8Message) {
+    const charArr = utf8Message.split('');
     const byteArr = new Uint8Array(charArr.length);
 
     for (let index = 0; index < charArr.length; index++) {
@@ -37,9 +37,9 @@ export function convertUTF8CharSequenceToByteArray(clearMessage) {
     return byteArr;
 }
 
-export function repeatingKeyXORCipher(clearMessage, key) {
-    const clearByteArr = convertUTF8CharSequenceToByteArray(clearMessage);
-    const keyByteArr = convertUTF8CharSequenceToByteArray(key);
+export function encryptByRepeatingKeyXORCipher(clearMessage, key) {
+    const clearByteArr = convertUTF8SequenceToByteArr(clearMessage);
+    const keyByteArr = convertUTF8SequenceToByteArr(key);
     const encryptedMessage = new Uint8Array(clearByteArr.length);
     let runner = 0;
 

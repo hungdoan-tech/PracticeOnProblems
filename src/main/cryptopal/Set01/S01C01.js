@@ -15,24 +15,25 @@ const b64EncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01
 const Status = {
     START_NEW: 0,
     TAKE_2: 1,
-    TAKE_4: 2
+    TAKE_4: 2,
 };
 
 /**
  * You will always need 3 hex(4 bits) to construct 2 base64(6 bits)
  * Just use simple bitwise operations to achieve this purpose
- * @param hexData
+ * @param hexMessage
  * @returns {string}
  */
-export function hexToBase64(hexData) {
+export function convertHexSequenceToBase64Sequence(hexMessage) {
+    const hexCharArr = hexMessage.split('');
     let b64Data = "";
     let sixBits = 0;
     let currentStatus = Status.START_NEW;
 
-    for (const hexChar of hexData) {
+    for (let index = 0; index < hexCharArr.length; index++) {
         // treat the bits of a char as an integer, and restrict this input bits could not be over the value 16
         // (max values of 4 bits be treated in base decimal)
-        const dec = parseInt(hexChar, 16);
+        const dec = parseInt(hexCharArr[index], 16);
 
         if (currentStatus === Status.START_NEW) {
             sixBits = dec;

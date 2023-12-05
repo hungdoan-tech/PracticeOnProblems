@@ -19,91 +19,24 @@
 // This code is going to turn out to be surprisingly useful later on. Breaking repeating-key XOR ("Vigenere") statistically is obviously an academic exercise, a "Crypto 101" thing. But more people "know how" to break it than can actually break it, and a similar technique breaks something much more important.
 import fs from 'fs';
 
-export function calculateHammingDistance(firstByteArr, secondByteArr) {
+const b64EncodingChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (firstByteArr.length !== secondByteArr.length) {
-        throw Error(' Invalid Input - lenght is not equal');
-    }
+const base64CharToIndex = new Map();
+[...b64EncodingChars].forEach((char, index) => {
+    base64CharToIndex.set(char, index);
+});
 
-    const xorResult = [];
-    let runner = 0;
-    while (runner < firstByteArr.length) {
-        xorResult.push(firstByteArr[runner] ^ secondByteArr[runner]);
-        runner++;
-    }
+const Status = {
+    START_NEW: 0,
+    TAKE_2: 1,
+    TAKE_4: 2,
+    TAKE_6: 3,
+};
 
-    let hammingDistance = 0;
-    for (let index = 0; index < xorResult.length; index++) {
+export function convertBase64SequenceToByteArr(base64Message) {
+    let base64CharArr = base64Message.split('');
 
-        let examinedBits = xorResult[index];
-        let differentBits = 0;
-        while (examinedBits > 0) {
-            differentBits += examinedBits & 0b0001;
-            examinedBits = examinedBits >> 1;
-        }
-        hammingDistance += differentBits;
-    }
-
-    return hammingDistance;
-}
-
-function findKeySize(encryptedByteArr) {
-
-    let result = {
-        distance: Infinity,
-        keySize: -1
-    };
-
-    for (let keySize = 2; keySize <= 40; keySize++) {
-
-        let wholeCipherTextHammingDistance = 0;
-        let start = 0;
-        let end = start + keySize;
-
-        let runner = 0;
-        while (encryptedByteArr.length - end >= keySize) {
-            const firstChunk = encryptedByteArr.slice(start, end);
-            const secondChunk = encryptedByteArr.slice(end, end + keySize);
-
-            const hammingDistance = calculateHammingDistance(firstChunk, secondChunk);
-            const averageHammingDistancePerBytes = hammingDistance / keySize;
-
-            wholeCipherTextHammingDistance += averageHammingDistancePerBytes;
-            start = end + keySize;
-            end = start + keySize;
-            runner += 2;
-        }
-
-        wholeCipherTextHammingDistance /= runner;
-        if (wholeCipherTextHammingDistance < result.distance) {
-            result = {
-                distance: wholeCipherTextHammingDistance,
-                keySize
-            };
-        }
-    }
-
-    return result;
-}
-
-export async function getBase64CharsInFileAsByteArr(filePath) {
-    const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
-    let encryptedCharArr = fileContent.split('');
-    return convertBase64CharArrToByteArr(encryptedCharArr);
-}
-
-function convertBase64CharArrToByteArr(base64CharArr) {
-    const b64EncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    const Status = {
-        START_NEW: 0,
-        TAKE_2: 1,
-        TAKE_4: 2,
-        TAKE_6: 3,
-    };
-
-    const getBits = (index) => b64EncodingTable.indexOf(base64CharArr[index]);
-
+    // We always need 4 base64 chars to construct 3 bytes
     const encryptedByteArr = new Uint8Array((base64CharArr.length * 3) / 4);
 
     let currentStatus = Status.START_NEW;
@@ -111,9 +44,9 @@ function convertBase64CharArrToByteArr(base64CharArr) {
     let runner = 0;
 
     for (let index = 0; index < base64CharArr.length; index++) {
-        const bits = getBits(index);
+        const bits = base64CharToIndex.get(base64CharArr[index]);
 
-        if (bits === -1) {
+        if (bits === undefined) {
             // Invalid character like \r \n
             continue;
         }
@@ -159,6 +92,78 @@ function convertBase64CharArrToByteArr(base64CharArr) {
     return encryptedByteArr.subarray(0, runner);
 }
 
-const encryptedByteArr = await getBase64CharsInFileAsByteArr('./src/main/cryptopal/Set01/S01C06.txt');
-const keySize = findKeySize(encryptedByteArr);
+export async function getByteArrFromFileContainBase64Chars(filePath) {
+    const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
+    return convertBase64SequenceToByteArr(fileContent);
+}
+
+export function calculateHammingDistance(firstByteArr, secondByteArr) {
+
+    if (firstByteArr.length !== secondByteArr.length) {
+        throw Error(' Invalid Input - lenght is not equal');
+    }
+
+    const xorResult = [];
+    let runner = 0;
+    while (runner < firstByteArr.length) {
+        xorResult.push(firstByteArr[runner] ^ secondByteArr[runner]);
+        runner++;
+    }
+
+    let hammingDistance = 0;
+    for (let index = 0; index < xorResult.length; index++) {
+
+        let examinedBits = xorResult[index];
+        let differentBits = 0;
+        while (examinedBits > 0) {
+            differentBits += examinedBits & 0b00000001;
+            examinedBits = examinedBits >> 1;
+        }
+        hammingDistance += differentBits;
+    }
+
+    return hammingDistance;
+}
+
+function findKeySizeInRepeatingXORCipher(encryptedByteArr) {
+
+    let result = {
+        distance: Infinity,
+        keySize: -1
+    };
+
+    for (let keySize = 2; keySize <= 40; keySize++) {
+
+        let wholeTextHammingDistance = 0;
+        let start = 0;
+        let end = start + keySize;
+
+        let runner = 0;
+        while (encryptedByteArr.length - end >= keySize) {
+            const firstChunk = encryptedByteArr.slice(start, end);
+            const secondChunk = encryptedByteArr.slice(end, end + keySize);
+
+            const twoChunksHammingDistance = calculateHammingDistance(firstChunk, secondChunk);
+            const averageHammingDistancePerBytes = twoChunksHammingDistance / keySize;
+
+            wholeTextHammingDistance += averageHammingDistancePerBytes;
+            start = end + keySize;
+            end = start + keySize;
+            runner += 2;
+        }
+
+        wholeTextHammingDistance /= runner;
+        if (wholeTextHammingDistance < result.distance) {
+            result = {
+                distance: wholeTextHammingDistance,
+                keySize
+            };
+        }
+    }
+
+    return result.keySize;
+}
+
+const encryptedByteArr = await getByteArrFromFileContainBase64Chars('./src/main/cryptopal/Set01/S01C06.txt');
+const keySize = findKeySizeInRepeatingXORCipher(encryptedByteArr);
 console.log(keySize);

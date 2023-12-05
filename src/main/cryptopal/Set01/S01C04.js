@@ -1,6 +1,6 @@
 // One of the 60-character strings in this file S01C04.txt has been encrypted by single-character XOR.
 // Find it.
-import { convertHexSequenceToByteArray, bruteForceDecryptByXORSingleChar } from "./S01C03.js";
+import { convertHexSequenceToByteArr, bruteForceDecryptXORSingleCharCipher } from "./S01C03.js";
 import fs from 'fs';
 
 export async function getTextLinesInFile(filePath) {
@@ -8,7 +8,7 @@ export async function getTextLinesInFile(filePath) {
     return data.split('\r\n');
 }
 
-export async function findingXORSingleCharInFiles(filePath) {
+export async function findingClearMessageInFileHasBeenAppliedXORSingleCharCipher(filePath) {
     const lines = await getTextLinesInFile(filePath);
 
     let finalResult = {
@@ -19,8 +19,8 @@ export async function findingXORSingleCharInFiles(filePath) {
     };
 
     for (let index = 0; index < lines.length; index++) {
-        const cipherByteArr = convertHexSequenceToByteArray(lines[index]);
-        const { key, score, clearMessage } = bruteForceDecryptByXORSingleChar(cipherByteArr);
+        const cipherByteArr = convertHexSequenceToByteArr(lines[index]);
+        const { key, score, clearMessage } = bruteForceDecryptXORSingleCharCipher(cipherByteArr);
         if (score > finalResult.score) {
             finalResult = { key, score, clearMessage, encryptedMessage: lines[index] };
         }
