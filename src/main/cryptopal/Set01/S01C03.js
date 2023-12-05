@@ -7,8 +7,6 @@
 // You can do this by hand. But don't: write code to do it for you.
 
 // How? Devise some method for "scoring" a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.
-import { assertEquals, tests } from "../javascript/TinyUTLib.js";
-
 const CHARACTER_FREQ = {
     'a': 0.0651738, 'b': 0.0124248, 'c': 0.0217339, 'd': 0.0349835, 'e': 0.1041442, 'f': 0.0197881, 'g': 0.0158610,
     'h': 0.0492888, 'i': 0.0558094, 'j': 0.0009033, 'k': 0.0050529, 'l': 0.0331490, 'm': 0.0202124, 'n': 0.0564513,
@@ -86,16 +84,4 @@ export function bruteForceDecryptByXORSingleChar(cipherByteArr) {
     }
 
     return finalDecyptedResult;
-}
-
-function perform() {
-    tests({
-        "giveHexadecimalSequences_bruteForceDecryptByXORSingleChar_expectCorrectDecryptedMessage": function () {
-            const hexadecimalSequences = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736';
-            const cipherByteArr = convertHexSequenceToByteArray(hexadecimalSequences);
-            const { key, score, clearMessage } = bruteForceDecryptByXORSingleChar(cipherByteArr);
-            assertEquals(`Cooking MC's like a pound of bacon`, clearMessage);
-            console.log(`With the key ${key}, we output with prmomising score ${score} \n The most likely clear message would be : ${clearMessage}`);
-        }
-    });
 }

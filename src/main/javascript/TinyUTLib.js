@@ -6,17 +6,23 @@ const TinyUTLib = {
      * 
      * @param {*} tests An object that contain multiple field, each field is a UT function
      */
-    run: function (tests) {
+    run: async function (tests) {
         let failures = 0;
         for (let testName in tests) {
             let testAction = tests[testName];
             try {
-                testAction();
+                if (Object.getPrototypeOf(testAction) === Object.getPrototypeOf(async function () { })) {
+                    await testAction();
+                } else {
+                    testAction();
+                }
                 console.log(`Test: ${testName} Passed`, 'OK');
+                console.log('\n----------------------------------------------------------------------------------------------------------------\n');
             } catch (e) {
                 failures++;
-                console.error(`Test: ${testName} Failed`, e);
+                console.error(`Test: ${testName} Failed`);
                 console.error(e.stack);
+                console.log('\n----------------------------------------------------------------------------------------------------------------\n');
             }
         }
     },
@@ -33,7 +39,7 @@ const TinyUTLib = {
 
     assertEquals: function (expected, actual) {
         if (expected !== actual) {
-            throw new Error(`Assert equals but ${actual} !== ${expected}`);
+            throw new Error(`Assert equals but the actual value ${actual} !== the expected value ${expected}`);
         }
     },
 };
