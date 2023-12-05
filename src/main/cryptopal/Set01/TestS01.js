@@ -30,9 +30,9 @@ tests({
         const cipherByteArr = convertHexSequenceToByteArray(hexadecimalSequences);
         const { key, score, clearMessage } = bruteForceDecryptByXORSingleChar(cipherByteArr);
 
-        assertEquals(`aCooking MC's like a pound of bacon`, clearMessage);
+        assertEquals(`Cooking MC's like a pound of bacon`, clearMessage);
 
-        console.log(`With the key ${key}, we output with prmomising score ${score} \n The most likely clear message would be : ${clearMessage}`);
+        console.log(`With the key = ${key}, we output with prmomising score ${score}\nThe most likely clear message would be : ${clearMessage}`);
     },
 
     "S01C04_giveAFileContainAllPossibleEncryptedMessage_bruteForceDecryptByXORSingleCharAllLines_expectCorrectDecryptedMessage": async function () {
@@ -40,7 +40,7 @@ tests({
 
         assertEquals(`Now that the party is jumping\n`, clearMessage);
 
-        console.log(`With key ${key} - Score ${score}\nFrom Cipher Message: ${encryptedMessage} to Clear Message : ${clearMessage}`);
+        console.log(`With the key = ${key} - Score = ${score}\nFrom Encrypted Message: ${encryptedMessage} to Clear Message : ${clearMessage}`);
     },
 
     'S01C05_giveUTF16CharsClearMessageAndKey_encryptUsingSimpleCipherRepeatingKeyXOR_expectCorrectEncryptedMessage': function () {
@@ -54,5 +54,5 @@ tests({
         console.log(`Fromt the clear message: ${clearMessage}
         \nEncrypt it with the repeating XOR key approach - key = ${key}
         \nThe encrypt message in hex would be ${encryptedMessage}`);
-    },
+    }
 });

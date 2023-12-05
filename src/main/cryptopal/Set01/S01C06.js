@@ -86,22 +86,79 @@ function findKeySize(encryptedByteArr) {
     return result;
 }
 
-
-//const encryptedByteArr = repeatingKeyXOR('I would like to invite you to a party that is hosted by my wife !', 'key');
-
 export async function getBase64CharsInFileAsByteArr(filePath) {
-    const data = await fs.promises.readFile(filePath, { encoding: 'utf8' });
-    let dataArr = data.replace('\r\n', '');
-    dataArr = dataArr.split('');
-
-    const result = new Uint8Array(dataArr.length);
-    for (let index = 0; index < dataArr.length; index++) {
-        const bits = dataArr[index].charCodeAt(0);
-        result[index] = bits;
-    }
-    return result;
+    const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
+    let encryptedCharArr = fileContent.split('');
+    return convertBase64CharArrToByteArr(encryptedCharArr);
 }
 
-const encryptedByteArr = await getBase64CharsInFileAsByteArr('./src/main/cryptopal/S01C06.txt');
-const abc = findKeySize(encryptedByteArr);
-console.log(abc);
+function convertBase64CharArrToByteArr(base64CharArr) {
+    const b64EncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    const Status = {
+        START_NEW: 0,
+        TAKE_2: 1,
+        TAKE_4: 2,
+        TAKE_6: 3,
+    };
+
+    const getBits = (index) => b64EncodingTable.indexOf(base64CharArr[index]);
+
+    const encryptedByteArr = new Uint8Array((base64CharArr.length * 3) / 4);
+
+    let currentStatus = Status.START_NEW;
+    let currentBits = 0;
+    let runner = 0;
+
+    for (let index = 0; index < base64CharArr.length; index++) {
+        const bits = getBits(index);
+
+        if (bits === -1) {
+            // Invalid character like \r \n
+            continue;
+        }
+
+        if (currentStatus === Status.START_NEW) {
+            currentBits = bits;
+            currentStatus = Status.TAKE_2;
+            continue;
+        }
+
+        if (currentStatus === Status.TAKE_2) {
+            currentBits = (currentBits << 2) | (bits >> 4);
+            encryptedByteArr[runner] = currentBits;
+            currentBits = bits & 0b001111;
+            currentStatus = Status.TAKE_4;
+            runner++;
+            continue;
+        }
+
+        if (currentStatus === Status.TAKE_4) {
+            currentBits = (currentBits << 4) | (bits >> 2);
+            encryptedByteArr[runner] = currentBits;
+            currentBits = bits & 0b000011;
+            currentStatus = Status.TAKE_6;
+            runner++;
+            continue;
+        }
+
+        if (currentStatus === Status.TAKE_6) {
+            currentBits = (currentBits << 6) | bits;
+            encryptedByteArr[runner] = currentBits;
+            currentStatus = Status.START_NEW;
+            runner++;
+            continue;
+        }
+    }
+
+    // Handle padding
+    if (currentStatus !== Status.START_NEW) {
+        encryptedByteArr[runner] = currentBits << (6 * (4 - currentStatus));
+    }
+
+    return encryptedByteArr.subarray(0, runner);
+}
+
+const encryptedByteArr = await getBase64CharsInFileAsByteArr('./src/main/cryptopal/Set01/S01C06.txt');
+const keySize = findKeySize(encryptedByteArr);
+console.log(keySize);
