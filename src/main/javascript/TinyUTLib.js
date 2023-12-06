@@ -41,6 +41,6 @@ const TinyUTLib = {
     },
 };
 
-export const assertHasValue = TinyUTLib.assertHasValue;
+export const assertHaveValue = TinyUTLib.assertHasValue;
 export const assertEquals = TinyUTLib.assertEquals;
 export const tests = TinyUTLib.run;

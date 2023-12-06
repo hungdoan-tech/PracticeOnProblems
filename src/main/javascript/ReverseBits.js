@@ -11,21 +11,21 @@ import { assertEquals, tests } from "./TinyUTLib.js";
  * It effectively treats the number as an unsigned integer.
  * 
  * In this function we want to treat the number as unsigned num, so we use Unsigned Right Shift
- * @param {num} n the input num
+ * @param {num} straightBits the input num
  * @returns {num} the result num when treat reverse bits as number
  */
-var reverseBits = function (n) {
-    let result = 0b0;
+export function reverseBits (straightBits) {
+    let reverseBits = 0b0;
 
-    let runner = 31;
-    while (n > 0) {
-        const oneLSB = n & 0b1;
-        result = result | oneLSB << runner;
-        n = n >>> 1;
-        runner--;
+    let shilftLeftBits = 31;
+    while (straightBits > 0) {
+        const oneLSB = straightBits & 0b1;
+        reverseBits = reverseBits | oneLSB << shilftLeftBits;
+        straightBits = straightBits >>> 1;
+        shilftLeftBits--;
     }
 
-    return result >>> 0;
+    return reverseBits >>> 0;
 };
 
 tests({

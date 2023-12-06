@@ -18,6 +18,7 @@
 // For each block, the single-byte XOR key that produces the best looking histogram is the repeating-key XOR key byte for that block. Put them together and you have the key.
 // This code is going to turn out to be surprisingly useful later on. Breaking repeating-key XOR ("Vigenere") statistically is obviously an academic exercise, a "Crypto 101" thing. But more people "know how" to break it than can actually break it, and a similar technique breaks something much more important.
 import fs from 'fs';
+import { bruteForceDecryptXORSingleCharCipher } from './S01C03.js';
 
 const b64EncodingChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -125,30 +126,30 @@ export function calculateHammingDistance(firstByteArr, secondByteArr) {
     return hammingDistance;
 }
 
-function findKeySizeInRepeatingXORCipher(encryptedByteArr) {
+export function findKeyLengthInRepeatingXORCipher(encryptedByteArr) {
 
     let result = {
         distance: Infinity,
-        keySize: -1
+        keyLength: -1
     };
 
-    for (let keySize = 2; keySize <= 40; keySize++) {
+    for (let keyLength = 2; keyLength <= 40; keyLength++) {
 
         let wholeTextHammingDistance = 0;
         let start = 0;
-        let end = start + keySize;
+        let end = start + keyLength;
 
         let runner = 0;
-        while (encryptedByteArr.length - end >= keySize) {
+        while (encryptedByteArr.length - end >= keyLength) {
             const firstChunk = encryptedByteArr.slice(start, end);
-            const secondChunk = encryptedByteArr.slice(end, end + keySize);
+            const secondChunk = encryptedByteArr.slice(end, end + keyLength);
 
             const twoChunksHammingDistance = calculateHammingDistance(firstChunk, secondChunk);
-            const averageHammingDistancePerBytes = twoChunksHammingDistance / keySize;
+            const averageHammingDistancePerBytes = twoChunksHammingDistance / keyLength;
 
             wholeTextHammingDistance += averageHammingDistancePerBytes;
-            start = end + keySize;
-            end = start + keySize;
+            start = end + keyLength;
+            end = start + keyLength;
             runner += 2;
         }
 
@@ -156,14 +157,63 @@ function findKeySizeInRepeatingXORCipher(encryptedByteArr) {
         if (wholeTextHammingDistance < result.distance) {
             result = {
                 distance: wholeTextHammingDistance,
-                keySize
+                keyLength: keyLength
             };
         }
     }
 
-    return result.keySize;
+    return result.keyLength;
 }
 
-const encryptedByteArr = await getByteArrFromFileContainBase64Chars('./src/main/cryptopal/Set01/S01C06.txt');
-const keySize = findKeySizeInRepeatingXORCipher(encryptedByteArr);
-console.log(keySize);
+function transposeChunksFromEncryptedArrByKeySize(encryptedByteArr, keyLength) {
+    const byteKeyIndexToEncryptedByteChunks = new Map();
+
+    let chunkIndex = 0;
+    for (let byteArrIndex = 0; byteArrIndex < encryptedByteArr.length; byteArrIndex++) {
+        const octet = encryptedByteArr[byteArrIndex];
+
+        if (chunkIndex == keyLength) {
+            chunkIndex = 0;
+        }
+
+        if (byteKeyIndexToEncryptedByteChunks.get(chunkIndex) === undefined) {
+            byteKeyIndexToEncryptedByteChunks.set(chunkIndex, []);
+        }
+
+        byteKeyIndexToEncryptedByteChunks.get(chunkIndex).push(octet);
+        byteKeyIndexToEncryptedByteChunks.set(chunkIndex, byteKeyIndexToEncryptedByteChunks.get(chunkIndex));
+
+        chunkIndex += 1;
+    }
+
+    return byteKeyIndexToEncryptedByteChunks;
+}
+
+export function decryptRepeatingXORKey(encryptedByteArr, keyLength) {
+
+    const byteKeyIndexToEncryptedByteChunks = transposeChunksFromEncryptedArrByKeySize(encryptedByteArr, keyLength);
+
+    // find out the key
+    const candidateChunkKeys = [];
+    for (let byteKeyIndex = 0; byteKeyIndex < keyLength; byteKeyIndex += 1) {
+        const encryptedByteChunks = byteKeyIndexToEncryptedByteChunks.get(byteKeyIndex);
+        const candidateKeyForCurrentChunk = bruteForceDecryptXORSingleCharCipher(encryptedByteChunks);
+        candidateChunkKeys.push(candidateKeyForCurrentChunk.key);
+    }
+
+    // decrypt by repeating XOR back the key bytes with the encrypted bytes
+    let decryptedMessage = '';
+    let byteKeyIndex = 0;
+    for (let encryptedByteArrIndex = 0; encryptedByteArrIndex < encryptedByteArr.length; encryptedByteArrIndex++) {
+        const decryptedByte = encryptedByteArr[encryptedByteArrIndex] ^ candidateChunkKeys[byteKeyIndex].charCodeAt(0);
+
+        decryptedMessage += String.fromCharCode(decryptedByte);
+
+        byteKeyIndex += 1;
+        if (byteKeyIndex >= candidateChunkKeys.length) {
+            byteKeyIndex = 0;
+        }
+    }
+
+    return decryptedMessage;
+}
