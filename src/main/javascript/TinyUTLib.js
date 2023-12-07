@@ -34,6 +34,18 @@ const TinyUTLib = {
         }
     },
 
+    assertTrue: function (value, msg) {
+        if (value !== True) {
+            throw new Error(`Assert: ${value} but not get it: ${msg}`);
+        }
+    },
+
+    assertFalse: function (value, msg) {
+        if (value !== True) {
+            throw new Error(`Assert: ${value} but not get it: ${msg}`);
+        }
+    },
+
     assertEquals: function (expected, actual) {
         if (expected !== actual) {
             throw new Error(`Assert equals but the actual value ${actual} !== the expected value ${expected}`);
@@ -41,6 +53,6 @@ const TinyUTLib = {
     },
 };
 
-export const assertHaveValue = TinyUTLib.assertHasValue;
+export const assertHasValue = TinyUTLib.assertHasValue;
 export const assertEquals = TinyUTLib.assertEquals;
 export const tests = TinyUTLib.run;

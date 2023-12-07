@@ -4,7 +4,7 @@ import { xorTwoHexMessages } from "./S01C02.js";
 import { convertHexSequenceToByteArr, bruteForceDecryptXORSingleCharCipher } from "./S01C03.js";
 import { findingClearMessageInFileHasBeenAppliedXORSingleCharCipher } from "./S01C04.js";
 import { encryptByRepeatingKeyXORCipher, convertByteArrToHexSequence, convertUTF8SequenceToByteArr } from "./S01C05.js";
-import { calculateHammingDistance, getByteArrFromFileContainBase64Chars, decryptRepeatingXORKey, findKeyLengthInRepeatingXORCipher } from "./S01C06.js";
+import { calculateHammingDistance, getByteArrFromFileContainBase64Sequence, decryptRepeatingXORKey, findKeyLengthInRepeatingXORCipher } from "./S01C06.js";
 
 tests({
     'S01C01_giveMessageInHex_convertToBase64_expectCorrectEncodeBase64Message': function () {
@@ -69,9 +69,9 @@ tests({
     'S01C06_giveFileContainBase64Sequence_decryptByRepeatingKeyCipher_expectCorrectClearMessage': async function () {
 
         const encryptedFilePath = './src/main/cryptopal/Set01/S01C06.txt';
-        const encryptedByteArr = await getByteArrFromFileContainBase64Chars(encryptedFilePath);
-        const keySize = findKeyLengthInRepeatingXORCipher(encryptedByteArr);
-        const decryptedMessage = decryptRepeatingXORKey(encryptedByteArr, keySize);
+        const encryptedByteArr = await getByteArrFromFileContainBase64Sequence(encryptedFilePath);
+        const keyLength = findKeyLengthInRepeatingXORCipher(encryptedByteArr);
+        const decryptedMessage = decryptRepeatingXORKey(encryptedByteArr, keyLength);
 
         const firstChunkOfClearMessage = `I'm back and I'm ringin' the bell \n`;
         const isDecryptionSuccessWithTheFirstChunk = decryptedMessage.startsWith(firstChunkOfClearMessage);

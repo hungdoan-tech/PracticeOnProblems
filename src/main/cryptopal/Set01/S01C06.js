@@ -59,7 +59,7 @@ export function convertBase64SequenceToByteArr(base64Message) {
         }
 
         if (currentStatus === Status.TAKE_2) {
-            currentBits = (currentBits << 2) | (bits >> 4);
+            currentBits = (currentBits << 2) | (bits >>> 4);
             encryptedByteArr[runner] = currentBits;
             currentBits = bits & 0b001111;
             currentStatus = Status.TAKE_4;
@@ -68,7 +68,7 @@ export function convertBase64SequenceToByteArr(base64Message) {
         }
 
         if (currentStatus === Status.TAKE_4) {
-            currentBits = (currentBits << 4) | (bits >> 2);
+            currentBits = (currentBits << 4) | (bits >>> 2);
             encryptedByteArr[runner] = currentBits;
             currentBits = bits & 0b000011;
             currentStatus = Status.TAKE_6;
@@ -93,7 +93,7 @@ export function convertBase64SequenceToByteArr(base64Message) {
     return encryptedByteArr.subarray(0, runner);
 }
 
-export async function getByteArrFromFileContainBase64Chars(filePath) {
+export async function getByteArrFromFileContainBase64Sequence(filePath) {
     const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
     return convertBase64SequenceToByteArr(fileContent);
 }
@@ -118,7 +118,7 @@ export function calculateHammingDistance(firstByteArr, secondByteArr) {
         let differentBits = 0;
         while (examinedBits > 0) {
             differentBits += examinedBits & 0b00000001;
-            examinedBits = examinedBits >> 1;
+            examinedBits = examinedBits >>> 1;
         }
         hammingDistance += differentBits;
     }
@@ -139,7 +139,7 @@ export function findKeyLengthInRepeatingXORCipher(encryptedByteArr) {
         let start = 0;
         let end = start + keyLength;
 
-        let runner = 0;
+        let totalChunksHaveBeenExamined = 0;
         while (encryptedByteArr.length - end >= keyLength) {
             const firstChunk = encryptedByteArr.slice(start, end);
             const secondChunk = encryptedByteArr.slice(end, end + keyLength);
@@ -150,10 +150,10 @@ export function findKeyLengthInRepeatingXORCipher(encryptedByteArr) {
             wholeTextHammingDistance += averageHammingDistancePerBytes;
             start = end + keyLength;
             end = start + keyLength;
-            runner += 2;
+            totalChunksHaveBeenExamined += 2;
         }
 
-        wholeTextHammingDistance /= runner;
+        wholeTextHammingDistance /= totalChunksHaveBeenExamined;
         if (wholeTextHammingDistance < result.distance) {
             result = {
                 distance: wholeTextHammingDistance,
