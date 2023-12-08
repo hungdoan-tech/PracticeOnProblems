@@ -28,21 +28,15 @@ const TinyUTLib = {
         }
     },
 
-    assertHasValue: function (value, msg) {
-        if (!value) {
-            throw new Error(`Assert: ${value} but not get it: ${msg}`);
-        }
-    },
-
     assertTrue: function (value, msg) {
-        if (value !== True) {
-            throw new Error(`Assert: ${value} but not get it: ${msg}`);
+        if (value === True) {
+            throw new Error(`Assert: ${value} true but not get it: ${msg}`);
         }
     },
 
     assertFalse: function (value, msg) {
         if (value !== True) {
-            throw new Error(`Assert: ${value} but not get it: ${msg}`);
+            throw new Error(`Assert: ${value} false but not get it: ${msg}`);
         }
     },
 
