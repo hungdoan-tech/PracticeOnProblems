@@ -1,32 +1,52 @@
 import { assertEquals, tests } from "./TinyUTLib.js";
 
-export const LRUCache = function (capacity) {
+const oneDayInMiliseconds = 1000 * 60 * 60 * 24;
+
+export const LRUCache = function (capacity, defaultExpirationTimeInMiliseconds = oneDayInMiliseconds) {
 
     this.capacity = capacity;
+
+    this.defaultExpirationTime = defaultExpirationTimeInMiliseconds;
 
     this.cache = new Map();
 
     this.minTimeHeap = new MinTimeHeap();
 
     this.get = function (key) {
-        if (this.cache.has(key)) {
-            this.minTimeHeap.remove(key);
-
-            this.minTimeHeap.insert(key);
-
-            return this.cache.get(key);
-        } else {
+        if (this.cache.has(key) === false) {
             return -1;
         }
+
+        if (this.cache.get(key).until < performance.now()) {
+            this.cache.delete(key);
+            this.minTimeHeap.remove(key);
+            return -1;
+        }
+
+        // best case - in cache and still not expired
+        this.minTimeHeap.remove(key);
+        this.minTimeHeap.insert(key);
+        const oldCache = this.cache.get(key);
+
+        this.cache.set(key, {
+            ...oldCache.value,
+            expirationTime: oldCache.expirationTime,
+            until: performance.now() + oldCache.expirationTime
+        });
+        return this.cache.get(key);
     };
 
-    this.put = function (key, value) {
+    this.put = function (key, value, specificExpirationTimeInMiliseconds = this.defaultExpirationTime) {
         if (this.cache.size >= this.capacity) {
             const lruKey = this.minTimeHeap.extractMin();
             this.cache.delete(lruKey);
         }
 
-        this.cache.set(key, value);
+        this.cache.set(key, {
+            ...value,
+            expirationTime: specificExpirationTimeInMiliseconds,
+            until: performance.now() + specificExpirationTimeInMiliseconds
+        });
         this.minTimeHeap.insert(key);
     };
 };
@@ -90,11 +110,13 @@ const MinTimeHeap = function () {
         const rightChild = 2 * index + 2;
         let smallest = index;
 
-        if (leftChild < this.heap.length && this.heap[leftChild].time < this.heap[smallest].time) {
+        if (leftChild < this.heap.length &&
+            this.heap[leftChild].time < this.heap[smallest].time) {
             smallest = leftChild;
         }
 
-        if (rightChild < this.heap.length && this.heap[rightChild].time < this.heap[smallest].time) {
+        if (rightChild < this.heap.length &&
+            this.heap[rightChild].time < this.heap[smallest].time) {
             smallest = rightChild;
         }
 
@@ -119,7 +141,7 @@ const MinTimeHeap = function () {
 
 tests({
     "give4EntriesKeyToValues_insertTheseEntriesToLRUTimmingCachesMax3Elements_expectedMissTheOldestElement": function () {
-        const lruCache = new LRUCache(3);
+        const lruCache = new LRUCache(3, 0);
 
         lruCache.put(10, 'one');
         lruCache.put(2, 'two');
