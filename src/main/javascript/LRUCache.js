@@ -29,11 +29,11 @@ export const LRUCache = function (capacity, defaultExpirationTimeInMiliseconds =
         const oldCache = this.cache.get(key);
 
         this.cache.set(key, {
-            ...oldCache.value,
+            value: oldCache.value,
             expirationTime: oldCache.expirationTime,
             until: performance.now() + oldCache.expirationTime
         });
-        return this.cache.get(key);
+        return this.cache.get(key).value;
     };
 
     this.put = function (key, value, specificExpirationTimeInMiliseconds = this.defaultExpirationTime) {
@@ -43,7 +43,7 @@ export const LRUCache = function (capacity, defaultExpirationTimeInMiliseconds =
         }
 
         this.cache.set(key, {
-            ...value,
+            value: value,
             expirationTime: specificExpirationTimeInMiliseconds,
             until: performance.now() + specificExpirationTimeInMiliseconds
         });
@@ -141,7 +141,7 @@ const MinTimeHeap = function () {
 
 tests({
     "give4EntriesKeyToValues_insertTheseEntriesToLRUTimmingCachesMax3Elements_expectedMissTheOldestElement": function () {
-        const lruCache = new LRUCache(3, 0);
+        const lruCache = new LRUCache(3);
 
         lruCache.put(10, 'one');
         lruCache.put(2, 'two');
@@ -149,10 +149,10 @@ tests({
 
         assertEquals('one', lruCache.get(10));
 
-        lruCache.put(4, 'four');
+        lruCache.put(4, 'four', 0);
 
         assertEquals(-1, lruCache.get(2));
         assertEquals('three', lruCache.get(30));
-        assertEquals('four', lruCache.get(4));
+        assertEquals(-1, lruCache.get(4));
     }
 });
