@@ -23,12 +23,12 @@ function stringify(data) {
 
 const object = {
   'a': [Infinity, NaN, 6, Symbol('special')],
-  'b': 3,
+  'b': () => 123,
   'c': {
     'd': '7',
     'e': 3.4,
     'f': {
-      'g': [1, 2, 3],
+      'g': [1, new Date(), 3],
       'h': 'hung'
     }
   }
