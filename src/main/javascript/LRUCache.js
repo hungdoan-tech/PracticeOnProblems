@@ -1,6 +1,4 @@
-import { _ut } from "./TinyUTLib.js";
-
-const { assertEquals, tests } = _ut;
+import { assertEquals, tests } from "./TinyUTLib.js";
 
 const oneDayInMiliseconds = 1000 * 60 * 60 * 24;
 

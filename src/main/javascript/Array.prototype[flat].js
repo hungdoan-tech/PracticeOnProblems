@@ -1,7 +1,9 @@
+import { tests, assert2ArraysEqual } from "./TinyUTLib.js";
+
 /**
  * Create a unique symbol - act like a global symbol to avoid duplicating the properties flat of the Array.prototype
  */
-flat = Symbol('flat function');
+const flat = Symbol("flat_arr");
 Array.prototype[flat] = performFlat;
 
 /**
@@ -10,43 +12,50 @@ Array.prototype[flat] = performFlat;
  * @param {number} depth
  * @returns
  */
-function performFlat(depth = 1) {
-    if (depth < 0) {
-        return null;
+export function performFlat(depth = 1) {
+  if (depth < 0) {
+    return null;
+  }
+
+  let newArr = [];
+
+  for (const element of this) {
+    if (element instanceof Array === false) {
+      newArr.push(element);
+      continue;
     }
 
-    let newArr = [];
+    const nestedArr = element;
+    const flattenedNestedArray = nestedArr[flat](depth - 1);
 
-    for (const element of this) {
-
-        if ((element instanceof Array) === false) {
-            newArr.push(element);
-            continue;
-        }
-
-        subArr = element;
-        let subFlatArray = subArr[flat](depth - 1);
-
-        if (subFlatArray === null) {
-            newArr.push(element);
-            continue;
-        }
-
-        for (const subFlatArrayElement of subFlatArray) {
-            newArr.push(subFlatArrayElement);
-        }
+    if (flattenedNestedArray === null) {
+      newArr.push(element);
+      continue;
     }
 
-    return newArr;
+    for (const subFlatArrayElement of flattenedNestedArray) {
+      newArr.push(subFlatArrayElement);
+    }
+  }
+
+  return newArr;
 }
 
-const arr = [1, [2], [3, [4, [5]]]];
+tests({
+  giveNestedLevelFrom1to3AndAnNestedArr_performFlattenTheArrToReachTo3NestedLevels_expectFlattenCorrect:
+    function () {
+      const arr = [1, [2], [3, [4, [5]]]];
 
-console.log(arr[flat]());
-// // [1, 2, 3, [4]]
+      let expetedArr = [1, 2, 3, [4, [5]]];
+      let actualArr = arr[flat]();
+      assert2ArraysEqual(expetedArr, actualArr);
 
-console.log(arr[flat](1));
-// // [1, 2, 3, [4]]
+      expetedArr = [1, 2, 3, 4, [5]];
+      actualArr = arr[flat](2);
+      assert2ArraysEqual(expetedArr, actualArr);
 
-console.log(arr[flat](2));
-// // [1, 2, 3, 4]
+      expetedArr = [1, 2, 3, 4, 5];
+      actualArr = arr[flat](3);
+      assert2ArraysEqual(expetedArr, actualArr);
+    },
+});
