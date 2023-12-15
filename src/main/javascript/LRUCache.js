@@ -12,7 +12,7 @@ export const LRUCache = function (
 
   this.cache = new Map();
 
-  this.minTimeHeap = new MinTimingHeap();
+  this.minTimingHeap = new MinTimingHeap();
 
   this.get = function (key) {
     if (this.cache.has(key) === false) {
@@ -21,13 +21,13 @@ export const LRUCache = function (
 
     if (this.cache.get(key).until < performance.now()) {
       this.cache.delete(key);
-      this.minTimeHeap.remove(key);
+      this.minTimingHeap.remove(key);
       return -1;
     }
 
     // best case - in cache and still not expired
-    this.minTimeHeap.remove(key);
-    this.minTimeHeap.insert(key);
+    this.minTimingHeap.remove(key);
+    this.minTimingHeap.insert(key);
     const oldCache = this.cache.get(key);
 
     this.cache.set(key, {
@@ -44,7 +44,7 @@ export const LRUCache = function (
     specificExpirationTimeInMiliseconds = this.defaultExpirationTime
   ) {
     if (this.cache.size >= this.capacity) {
-      const lruKey = this.minTimeHeap.extractMin();
+      const lruKey = this.minTimingHeap.extractMin();
       this.cache.delete(lruKey);
     }
 
@@ -53,7 +53,7 @@ export const LRUCache = function (
       expirationTime: specificExpirationTimeInMiliseconds,
       until: performance.now() + specificExpirationTimeInMiliseconds,
     });
-    this.minTimeHeap.insert(key);
+    this.minTimingHeap.insert(key);
   };
 };
 
