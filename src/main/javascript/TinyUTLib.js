@@ -2,8 +2,9 @@ export const ut = (function (global, factoryFunc) {
   // Check if the code is running in a Node.js environment
   if (typeof exports === "object" && typeof module !== "undefined") {
     // CommonJS: export the module
-    module.exports = factoryFunc();
-    return;
+    _ut = factoryFunc();
+    module.exports = _ut
+    return _ut;
   }
 
   // ESM or other environment: attach the module to the global object
@@ -59,7 +60,7 @@ export const ut = (function (global, factoryFunc) {
   };
 
   _ut.assertFalse = function (value, msg) {
-    if (value) {
+    if (!value) {
       throw new Error(`Assert: false but not get it ${msg ? msg : ""}`);
     }
   };

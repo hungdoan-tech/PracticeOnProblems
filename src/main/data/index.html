@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="../javascript/TinyChartLib.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.createElement("canvas");
+            canvas.id = "columnChartCanvas";
+            document.body.appendChild(canvas);
+
+            // Usage example
+            const columnChartData = [5, 8, 12, 6, 10];
+            const lineChartData = [3, 7, 9, 5, 8];
+
+            ChartLibrary.drawColumnChart(columnChartData, "columnChartCanvas", {
+                title: "hung",
+            });
+            //   ChartLibrary.drawLineChart(lineChartData, "lineChartCanvas");
+        });
+    </script>
+</body>
+
+</html>
