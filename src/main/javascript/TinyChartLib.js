@@ -1,3 +1,13 @@
+// Need further effort to impl supporting for these kind of charts
+// Scatter Plot
+// Line Chart
+// Bar Chart
+// Pie Chart
+// Donut Chart
+// Bubble Chart
+// Area Chart
+// Radar Chart
+// Mixed Chart
 const ChartLibrary = (function () {
   const drawColumnChart = function (data, canvasId, options) {
     const canvas = document.getElementById(canvasId);
