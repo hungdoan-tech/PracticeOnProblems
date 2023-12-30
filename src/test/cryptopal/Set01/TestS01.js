@@ -1,22 +1,26 @@
-import { assertEquals, assertTrue, tests } from "../../javascript/TinyUTLib.js";
-import { convertHexSequenceToBase64Sequence } from "./S01C01.js";
-import { xorTwoHexMessages } from "./S01C02.js";
+import {
+  assertEquals,
+  assertTrue,
+  tests,
+} from "../../../main/raw_things/TinyUTLib.js";
+import { convertHexSequenceToBase64Sequence } from "../../../main/cryptopal/Set01/S01C01.js";
+import { xorTwoHexMessages } from "../../../main/cryptopal/Set01/S01C02.js";
 import {
   convertHexSequenceToByteArr,
   bruteForceDecryptXORSingleCharCipher,
-} from "./S01C03.js";
-import { findingClearMessageInFileHasBeenAppliedXORSingleCharCipher } from "./S01C04.js";
+} from "../../../main/cryptopal/Set01/S01C03.js";
+import { findingClearMessageInFileHasBeenAppliedXORSingleCharCipher } from "../../../main/cryptopal/Set01/S01C04.js";
 import {
   encryptByRepeatingKeyXORCipher,
   convertByteArrToHexSequence,
   convertUTF8SequenceToByteArr,
-} from "./S01C05.js";
+} from "../../../main/cryptopal/Set01/S01C05.js";
 import {
   calculateHammingDistance,
   getByteArrFromFileContainBase64Sequence,
   decryptRepeatingXORKey,
   findKeyLengthInRepeatingXORCipher,
-} from "./S01C06.js";
+} from "../../../main/cryptopal/Set01/S01C06.js";
 
 tests({
   S01C01_giveMessageInHex_convertToBase64_expectCorrectEncodeBase64Message:
