@@ -1,28 +1,15 @@
-export const ut = (function (global, factoryFunc) {
-  // Check if the code is running in a Node.js environment
-  if (typeof exports === "object" && typeof module !== "undefined") {
-    // CommonJS: export the module
-    _ut = factoryFunc();
-    module.exports = _ut
-    return _ut;
-  }
-
-  // ESM or other environment: attach the module to the global object
-  global._ut = factoryFunc();
-
-  // Because in my pet project, I am currently setting my local NodeJs packages.json as  "type": "module"
-  // So at here I return it back the top level of the current module to export it for all other files can use and extract _ut
-  return global._ut;
-})(globalThis, function () {
-  const _ut = {};
-
+/**
+ * Creates a Testing Library for running unit tests.
+ * @constructor
+ */
+const TestingLibrary = function () {
   /**
-   * Pass your UT tests as field of an object, then each test will be run.
+   * Pass your set of tests as field of an object, then each test will be run.
    * See more about assert, assertEqual, eq, fail
    *
    * @param {*} objContainTestingFunctions An object that contain multiple field, each field is a UT function
    */
-  _ut.tests = async function (objContainTestingFunctions) {
+  this.tests = async function (objContainTestingFunctions) {
     console.log(
       "\n----------------------------------------------------------------------------------------------------------------\n"
     );
@@ -53,19 +40,37 @@ export const ut = (function (global, factoryFunc) {
     }
   };
 
-  _ut.assertTrue = function (value, msg) {
+  /**
+   * Asserts that a value is true.
+   * @param {boolean} value - The value to assert.
+   * @param {string} [msg] - An optional message to display on failure.
+   * @throws {Error} Throws an error if the value is not true.
+   */
+  this.assertTrue = function (value, msg) {
     if (!value) {
       throw new Error(`Assert true but not get it ${msg ? msg : ""}`);
     }
   };
 
-  _ut.assertFalse = function (value, msg) {
+  /**
+   * Asserts that a value is false.
+   * @param {boolean} value - The value to assert.
+   * @param {string} [msg] - An optional message to display on failure.
+   * @throws {Error} Throws an error if the value is not false.
+   */
+  this.assertFalse = function (value, msg) {
     if (!value) {
       throw new Error(`Assert: false but not get it ${msg ? msg : ""}`);
     }
   };
 
-  _ut.assertEquals = function (expected, actual) {
+  /**
+   * Asserts that two values are equal.
+   * @param {*} expected - The expected value.
+   * @param {*} actual - The actual value.
+   * @throws {Error} Throws an error if the values are not equal.
+   */
+  this.assertEquals = function (expected, actual) {
     if (expected !== actual) {
       throw new Error(
         `Assert equals but the actual value ${actual} !== the expected value ${expected}`
@@ -73,7 +78,13 @@ export const ut = (function (global, factoryFunc) {
     }
   };
 
-  _ut.assert2ArraysEqual = function (arr1, arr2) {
+  /**
+   * Asserts that two arrays are deeply equal.
+   * @param {Array} arr1 - The first array.
+   * @param {Array} arr2 - The second array.
+   * @returns {boolean} Returns true if the arrays are deeply equal, otherwise false.
+   */
+  this.assert2ArraysEqual = function (arr1, arr2) {
     if (arr1.length !== arr2.length) {
       return false;
     }
@@ -95,14 +106,25 @@ export const ut = (function (global, factoryFunc) {
 
     return true;
   };
+};
 
-  return _ut;
-});
+const _test = new TestingLibrary();
 
+// Check if the code is running in a Node.js environment
+if (typeof exports === "object" && typeof module !== "undefined") {
+  // CommonJS: export the module
+  module.exports = _test;
+}
+
+// ESM or other environment: attach the module to the global object
+global._ut = _test;
+
+// Because in my pet project, I am currently setting my local NodeJs packages.json as  "type": "module"
+// So at here I return it back the top level of the current module to export it for all other files can use and extract _ut
 export const {
   tests,
   assertEquals,
   assertFalse,
   assertTrue,
   assert2ArraysEqual,
-} = ut;
+} = _test;

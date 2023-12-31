@@ -1,5 +1,3 @@
-import { assertEquals, tests } from "./TinyUTLib.js";
-
 const oneDayInMiliseconds = 1000 * 60 * 60 * 24;
 
 export const LRUCache = function (

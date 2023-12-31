@@ -1,8 +1,8 @@
 import {
-  setupStubs,
+  setupStub,
   restoreStubToOriginals,
-} from "../../main/raw_things/TinyMockLib.js";
-import { tests, assertEquals } from "../../main/raw_things/TinyUTLib.js";
+} from "../../main/raw_things/MockingLibrary.js";
+import { tests, assertEquals } from "../../main/raw_things/TestingLibrary.js";
 
 tests({
   givenAnonymousObject_stubOneOfItsMethod_assertStubCorrectly: function () {
@@ -18,7 +18,7 @@ tests({
     const originalRepsonse = "Real Data";
     const mockRepsonse = "Mock Data";
 
-    setupStubs(myInstance, "fetchData", () => {
+    setupStub(myInstance, "fetchData", () => {
       return mockRepsonse;
     });
 
@@ -43,7 +43,7 @@ tests({
 
       const originalRepsonse = "Buddy";
       const mockRepsonse = "Mock Data";
-      setupStubs(dog, "sayName", () => {
+      setupStub(dog, "sayName", () => {
         return mockRepsonse;
       });
 
@@ -96,7 +96,7 @@ tests({
 
       const originalRepsonse = "Polly";
       const mockRepsonse = "Mock Data";
-      setupStubs(parrot, "sayName", () => {
+      setupStub(parrot, "sayName", () => {
         return mockRepsonse;
       });
 
@@ -149,7 +149,7 @@ tests({
 
       const originalRepsonse = "Polly";
       const mockRepsonse = "Mock Data";
-      setupStubs(parrot, "sayName", () => {
+      setupStub(parrot, "sayName", () => {
         return mockRepsonse;
       });
 

@@ -1,4 +1,4 @@
-import { assertEquals, tests } from "../../raw_things/TinyUTLib.js";
+import { assertEquals, tests } from "../../raw_things/TestingLibrary.js";
 
 /**
  * >> (Signed Right Shift):

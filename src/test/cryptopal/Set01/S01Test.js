@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertTrue,
   tests,
-} from "../../../main/raw_things/TinyUTLib.js";
+} from "../../../main/raw_things/TestingLibrary.js";
 import { convertHexSequenceToBase64Sequence } from "../../../main/cryptopal/Set01/S01C01.js";
 import { xorTwoHexMessages } from "../../../main/cryptopal/Set01/S01C02.js";
 import {

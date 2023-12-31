@@ -1,5 +1,5 @@
 import { LRUCache } from "../../main/raw_things/LRUCache.js";
-import { tests, assertEquals } from "../../main/raw_things/TinyUTLib.js";
+import { tests, assertEquals } from "../../main/raw_things/TestingLibrary.js";
 
 tests({
   give4EntriesKeyToValues_insertTheseEntriesToLRUTimmingCachesMax3Elements_expectedMissTheOldestElement:

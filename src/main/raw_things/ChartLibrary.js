@@ -63,5 +63,5 @@ const ChartLibrary = (function () {
 
 // Export the library in global scope (for browsers)
 if (typeof window !== "undefined") {
-  window.ChartLibrary = ChartLibrary;
+  window._chart = ChartLibrary;
 }

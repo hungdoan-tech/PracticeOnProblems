@@ -1,9 +1,7 @@
-import { tests, assert2ArraysEqual } from "./TinyUTLib.js";
-
 /**
  * Create a unique symbol - act like a global symbol to avoid duplicating the properties flat of the Array.prototype
  */
-const flat = Symbol("flat_arr");
+export const flat = Symbol("flat_arr");
 Array.prototype[flat] = performFlat;
 
 /**
@@ -40,22 +38,3 @@ export function performFlat(depth = 1) {
 
   return newArr;
 }
-
-tests({
-  giveNestedLevelFrom1to3AndAnNestedArr_performFlattenTheArrToReachTo3NestedLevels_expectFlattenCorrect:
-    function () {
-      const arr = [1, [2], [3, [4, [5]]]];
-
-      let expetedArr = [1, 2, 3, [4, [5]]];
-      let actualArr = arr[flat]();
-      assert2ArraysEqual(expetedArr, actualArr);
-
-      expetedArr = [1, 2, 3, 4, [5]];
-      actualArr = arr[flat](2);
-      assert2ArraysEqual(expetedArr, actualArr);
-
-      expetedArr = [1, 2, 3, 4, 5];
-      actualArr = arr[flat](3);
-      assert2ArraysEqual(expetedArr, actualArr);
-    },
-});
