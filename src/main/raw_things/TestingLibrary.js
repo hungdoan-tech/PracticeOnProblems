@@ -3,20 +3,80 @@
  * @constructor
  */
 const TestingLibrary = function () {
+  const beforeAllCallbacks = [];
+  const afterAllCallbacks = [];
+  const beforeEachCallbacks = [];
+  const afterEachCallbacks = [];
+
+  function getCaller() {
+    const stack = new Error().stack;
+    const lines = stack.split("\n");
+    const callerLine = lines[2];
+    const caller = callerLine.trim().replace(/^at /, "");
+    return caller;
+  }
+
+  this.beforeEach = function (callBack) {
+    if (typeof callBack !== "function") {
+      throw new Error("The provived param is not a function");
+    }
+
+    beforeEachCallbacks.push(callBack);
+  };
+
+  this.afterEach = function (callBack) {
+    if (typeof callBack !== "function") {
+      throw new Error("The provived param is not a function");
+    }
+
+    afterEachCallbacks.push(callBack);
+  };
+
+  this.beforeAll = function (callBack) {
+    if (typeof callBack !== "function") {
+      throw new Error("The provived param is not a function");
+    }
+
+    beforeAllCallbacks.push(callBack);
+  };
+
+  this.afterAll = function (callBack) {
+    if (typeof callBack !== "function") {
+      throw new Error("The provived param is not a function");
+    }
+
+    afterAllCallbacks.push(callBack);
+  };
+
+  const runMultipleFunctionsInArray = function (arrFunctions) {
+    for (let func of arrFunctions) {
+      func();
+    }
+  };
+
   /**
    * Pass your set of tests as field of an object, then each test will be run.
    * See more about assert, assertEqual, eq, fail
    *
    * @param {*} objContainTestingFunctions An object that contain multiple field, each field is a UT function
    */
-  this.tests = async function (objContainTestingFunctions) {
+  this.tests = async function (overallTetsName, objContainTestingFunctions) {
+    overallTetsName = overallTetsName || `Test ${getCaller()}`;
+    console.log(`Test suite: ${overallTetsName}`);
+
+    runMultipleFunctionsInArray(beforeAllCallbacks);
     console.log(
       "\n----------------------------------------------------------------------------------------------------------------\n"
     );
     let failures = 0;
     for (let testName in objContainTestingFunctions) {
+      runMultipleFunctionsInArray(beforeEachCallbacks);
       let testAction = objContainTestingFunctions[testName];
       try {
+        if (typeof testAction !== "function") {
+          continue;
+        }
+
         if (
           Object.getPrototypeOf(testAction) ===
           Object.getPrototypeOf(async function () {})
@@ -25,19 +85,20 @@ const TestingLibrary = function () {
         } else {
           testAction();
         }
+
         console.log(`\nTEST: ${testName} PASSED`);
-        console.log(
-          "\n----------------------------------------------------------------------------------------------------------------\n"
-        );
       } catch (e) {
         failures++;
         console.error(`\nTEST: ${testName} FAILED`);
         console.error(e.stack);
+      } finally {
+        runMultipleFunctionsInArray(afterEachCallbacks);
         console.log(
           "\n----------------------------------------------------------------------------------------------------------------\n"
         );
       }
     }
+    runMultipleFunctionsInArray(afterAllCallbacks);
   };
 
   /**
@@ -127,4 +188,8 @@ export const {
   assertFalse,
   assertTrue,
   assert2ArraysEqual,
+  beforeAll,
+  afterAll,
+  beforeEach,
+  afterEach,
 } = _test;

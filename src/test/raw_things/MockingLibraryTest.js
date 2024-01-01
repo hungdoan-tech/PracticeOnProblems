@@ -4,7 +4,17 @@ import {
 } from "../../main/raw_things/MockingLibrary.js";
 import { tests, assertEquals } from "../../main/raw_things/TestingLibrary.js";
 
-tests({
+tests("Test mocking library", {
+  givenAnonymousFunc_stubOneOfItsMethod_assertStubCorrectly: function () {
+    function abc() {
+      return "real";
+    }
+
+    setupStub(abc, "abc", () => "mock");
+
+    assertEquals(abc(), "mock");
+  },
+
   givenAnonymousObject_stubOneOfItsMethod_assertStubCorrectly: function () {
     const createRealObject = function () {
       return {

@@ -2,6 +2,10 @@ import {
   assertEquals,
   assertTrue,
   tests,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
 } from "../../../main/raw_things/TestingLibrary.js";
 import { convertHexSequenceToBase64Sequence } from "../../../main/cryptopal/Set01/S01C01.js";
 import { xorTwoHexMessages } from "../../../main/cryptopal/Set01/S01C02.js";
@@ -22,7 +26,23 @@ import {
   findKeyLengthInRepeatingXORCipher,
 } from "../../../main/cryptopal/Set01/S01C06.js";
 
-tests({
+beforeAll(() => {
+  console.log("Before all");
+});
+
+afterAll(() => {
+  console.log("After all");
+});
+
+beforeEach(() => {
+  console.log("Before each");
+});
+
+afterEach(() => {
+  console.log("After each");
+});
+
+tests("Test Cryptopal Set 01", {
   S01C01_giveMessageInHex_convertToBase64_expectCorrectEncodeBase64Message:
     function () {
       const messageInHex =

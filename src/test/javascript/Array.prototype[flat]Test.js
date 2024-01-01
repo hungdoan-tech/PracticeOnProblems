@@ -4,7 +4,7 @@ import {
   assert2ArraysEqual,
 } from "../../main/raw_things/TestingLibrary.js";
 
-tests({
+tests("Test Array flat function", {
   giveNestedLevelFrom1to3AndAnNestedArr_performFlattenTheArrToReachTo3NestedLevels_expectFlattenCorrect:
     function () {
       const arr = [1, [2], [3, [4, [5]]]];

@@ -1,11 +1,15 @@
 // fetchList is provided
-// const fetchList = (since?: number) =>
-//   Promise<{items: Array<{id: number}>}>
+export const fetchList = (sincePostId) => {
+  const url = "http://api.example.com/data";
+  const params = { id: sincePostId };
+  const queryString = new URLSearchParams(params).toString();
+  return fetch(`${url}?${queryString}`).then((response) => response.json());
+};
 
 /**
  * Using async/await loop
  */
-async function fetchListWithAmount(amount = 5) {
+export async function fetchListWithAmount(amount = 5) {
   let cursor;
   const result = [];
 
@@ -19,89 +23,90 @@ async function fetchListWithAmount(amount = 5) {
     cursor = items[items.length - 1].id;
     continue;
   }
+
   return result.slice(0, amount);
 }
 
-/**
- * Using async iterator
- */
-async function fetchListWithAmount(amount = 5) {
-  const result = [];
+// /**
+//  * Using async iterator
+//  */
+// async function fetchListWithAmount(amount = 5) {
+//   const result = [];
 
-  for await (const nextItems of fetchListIterator()) {
-    result.push(...nextItems);
-  }
-  return result.slice(0, amount);
+//   for await (const nextItems of fetchListIterator()) {
+//     result.push(...nextItems);
+//   }
+//   return result.slice(0, amount);
 
-  function fetchListIterator() {
-    let totalAmountFetched = 0;
-    let cursor;
+//   function fetchListIterator() {
+//     let totalAmountFetched = 0;
+//     let cursor;
 
-    return {
-      [Symbol.asyncIterator]() {
-        return {
-          async next() {
-            const { items } = await fetchList(cursor);
-            // If API is exhausted OR we reached desired amount -> stop
-            if (items.length === 0 || totalAmountFetched > amount) {
-              return { done: true };
-            }
+//     return {
+//       [Symbol.asyncIterator]() {
+//         return {
+//           async next() {
+//             const { items } = await fetchList(cursor);
+//             // If API is exhausted OR we reached desired amount -> stop
+//             if (items.length === 0 || totalAmountFetched > amount) {
+//               return { done: true };
+//             }
 
-            totalAmountFetched += items.length;
-            cursor = items[items.length - 1].id;
+//             totalAmountFetched += items.length;
+//             cursor = items[items.length - 1].id;
 
-            return {
-              done: false,
-              value: items,
-            };
-          },
-        };
-      },
-    };
-  }
-}
+//             return {
+//               done: false,
+//               value: items,
+//             };
+//           },
+//         };
+//       },
+//     };
+//   }
+// }
 
-/**
- * Using async generator
- */
-async function fetchListWithAmount(amount = 5) {
-  const result = [];
+// /**
+//  * Using async generator
+//  */
+// async function fetchListWithAmount(amount = 5) {
+//   const result = [];
 
-  for await (const nextItems of fetchListGenerator()) {
-    result.push(...nextItems);
-  }
-  return result.slice(0, amount);
+//   for await (const nextItems of fetchListGenerator()) {
+//     result.push(...nextItems);
+//   }
+//   return result.slice(0, amount);
 
-  async function* fetchListGenerator() {
-    let totalAmountFetched = 0;
-    let cursor;
+//   async function* fetchListGenerator() {
+//     let totalAmountFetched = 0;
+//     let cursor;
 
-    while (totalAmountFetched < amount) {
-      const { items } = await fetchList(cursor);
-      if (items.length === 0) break;
-      cursor = items[items.length - 1].id;
-      totalAmountFetched += items.length;
-      yield items;
-    }
-  }
-}
+//     while (totalAmountFetched < amount) {
+//       const { items } = await fetchList(cursor);
+//       if (items.length === 0) break;
+//       cursor = items[items.length - 1].id;
+//       totalAmountFetched += items.length;
+//       yield items;
+//     }
+//   }
+// }
 
-/**
- * Using recursion and Promise
- */
-function fetchListWithAmount(amount = 5) {
-  return new Promise((resolve) => {
-    const result = [];
-    getItems();
+// /**
+//  * Using recursion and Promise
+//  */
+// function fetchListWithAmount(amount = 5) {
+//   return new Promise((resolve) => {
+//     const result = [];
+//     getItems();
 
-    function getItems(cursor) {
-      fetchList(cursor).then(({ items }) => {
-        result.push(...items);
-        if (items.length === 0 || items.length >= amount) {
-          return resolve(result.slice(0, amount));
-        }
-        getItems(items[items.length - 1].id);
-      });
-    }
-  });
-}
+//     function getItems(cursor) {
+//       fetchList(cursor).then(({ items }) => {
+//         result.push(...items);
+//         if (items.length === 0 || items.length >= amount) {
+//           return resolve(result.slice(0, amount));
+//         }
+//         getItems(items[items.length - 1].id);
+//       });
+//     }
+//   });
+// }
