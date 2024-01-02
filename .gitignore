@@ -1,3 +1,5 @@
 .idea
 out
 .vscode
+node_modules
+graph.json
