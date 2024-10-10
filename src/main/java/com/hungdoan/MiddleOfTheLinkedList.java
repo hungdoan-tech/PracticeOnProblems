@@ -6,7 +6,7 @@ import com.hungdoan.support.ListNode;
 public class MiddleOfTheLinkedList {
 
     public static void main(String[] args) {
-        int[] arr = {1, 2, 3, 4, 5};
+        int[] arr = {1, 2, 3, 4, 5, 6};
         LinkedList linkedList = new LinkedList();
         linkedList.addAll(arr);
         System.out.println(middleNode(linkedList.head));
@@ -25,13 +25,14 @@ public class MiddleOfTheLinkedList {
         ListNode slowPointer = head;
         ListNode fastPointer = head;
 
-        while (fastPointer != null) {
+        while (fastPointer.next != null && fastPointer.next.next != null) {
             slowPointer = slowPointer.next;
             fastPointer = fastPointer.next.next;
         }
 
-        return slowPointer;
+        if (fastPointer.next == null) {
+            return slowPointer;
+        }
+        return slowPointer.next;
     }
-
-
 }
