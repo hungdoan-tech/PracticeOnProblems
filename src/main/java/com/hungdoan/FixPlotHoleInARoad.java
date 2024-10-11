@@ -9,27 +9,27 @@ public class FixPlotHoleInARoad {
     public static void main(String[] args) {
         String s = "...xxx..x....xxx.";
         int b = 7;
-        int solution = solution(s, b);
+        int solution = solution2(s, b);
         System.out.println(solution);
 
         s = "..xxxxx";
         b = 4;
-        solution = solution(s, b);
+        solution = solution2(s, b);
         System.out.println(solution);
 
         s = "x.x.xxx...x";
         b = 14;
-        solution = solution(s, b);
+        solution = solution2(s, b);
         System.out.println(solution);
 
         s = "..";
         b = 5;
-        solution = solution(s, b);
+        solution = solution2(s, b);
         System.out.println(solution);
     }
 
     private static int solution(String s, int b) {
-
+        s = s + ".";
         char[] charArray = s.toCharArray();
 
         List<Integer> plotHoles = new LinkedList<>();
@@ -47,10 +47,6 @@ public class FixPlotHoleInARoad {
                 plotHoles.add(plotHoleLength);
             }
             plotHoleLength = 0;
-        }
-
-        if (charArray[charArray.length - 1] == 'x') {
-            plotHoles.add(plotHoleLength);
         }
 
         int fixedHole = 0;
@@ -76,5 +72,39 @@ public class FixPlotHoleInARoad {
         }
 
         return fixedHole;
+    }
+
+    public static int solution2(String road, int budget) {
+        road += ".";
+        int n = road.length();
+        int[] cnt = new int[n];
+        int k = 0;
+
+        for (char c : road.toCharArray()) {
+
+            if (c == 'x') {
+                ++k;
+                continue;
+            }
+
+            if (k > 0) {
+                ++cnt[k];
+                k = 0;
+            }
+        }
+
+        int ans = 0;
+        for (k = n - 1; k > 0 && budget > 0; k--) {
+            if (cnt[k] == 0) {
+                continue;
+            }
+
+            int t = Math.min(budget / (k + 1), cnt[k]);
+            ans += t * k;
+            budget -= t * (k + 1);
+            cnt[k - 1] += cnt[k] - t;  //shrink into the smaller group
+        }
+
+        return ans;
     }
 }
