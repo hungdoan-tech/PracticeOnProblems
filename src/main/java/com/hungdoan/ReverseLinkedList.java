@@ -12,7 +12,7 @@ public class ReverseLinkedList {
         linkedList.add(3);
         linkedList.add(4);
         linkedList.add(5);
-        System.out.println(reverseList(linkedList.head));
+        System.out.println(reverseList2(linkedList.head));
     }
 
     public static ListNode reverseList(ListNode head) {
@@ -33,5 +33,23 @@ public class ReverseLinkedList {
         nextNode.next = node;
         node.next = null;
         return tail;
+    }
+
+    public static ListNode reverseList2(ListNode head) {
+        ListNode runner = head;
+        ListNode newHead = null;
+
+        while (runner != null) {
+
+            ListNode nextNode = runner.next;
+
+            runner.next = newHead;
+
+            newHead = runner;
+
+            runner = nextNode;
+        }
+
+        return newHead;
     }
 }
