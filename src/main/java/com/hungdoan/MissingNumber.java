@@ -1,5 +1,8 @@
 package com.hungdoan;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MissingNumber {
 
     public static void main(String[] args) {
@@ -31,5 +34,30 @@ public class MissingNumber {
         }
 
         return missingNum;
+    }
+
+
+    // for case the numbers could be negative
+    public int solution(int[] A) {
+        Set<Integer> set = new HashSet<>();
+
+        int runner = 0;
+        while (runner < A.length) {
+            set.add(A[runner]);
+            runner++;
+        }
+
+        runner = 0;
+        while (runner < A.length) {
+
+            if (set.contains(runner + 1)) {
+                runner++;
+                continue;
+            }
+
+            break;
+        }
+
+        return runner + 1;
     }
 }
