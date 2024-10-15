@@ -36,6 +36,18 @@ public class MissingNumber {
         return missingNum;
     }
 
+    public int missingNumber2(int[] nums) {
+        int temp = 0;
+
+        int index = 0;
+        for (int num : nums) {
+            temp = temp ^ index ^ num;
+            index++;
+        }
+
+        return temp ^ index;
+    }
+
 
     // for case the numbers could be negative
     public int solution(int[] A) {
