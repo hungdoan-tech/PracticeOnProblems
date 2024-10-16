@@ -3,3 +3,5 @@ out
 .vscode
 node_modules
 graph.json
+*.iml
+node_modules
