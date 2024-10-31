@@ -75,6 +75,25 @@ public class MaximumAverageSubArrayI {
         return maxAvg;
     }
 
+    public double findMaxAverage3(int[] nums, int k) {
+
+        int maxValue = 0;
+        for (int i = 0; i < k; i++) {
+            maxValue += nums[i];
+        }
+
+        int currentValue = maxValue;
+        for (int i = k; i < nums.length; i++) {
+            currentValue = currentValue - nums[i - k] + nums[i];
+
+            if (currentValue > maxValue) {
+                maxValue = currentValue;
+            }
+        }
+
+        return (double) maxValue / k;
+    }
+
 
     public static void main(String[] args) {
         int[] arr = new int[]{1, 12, -5, -6, 50, 3};
