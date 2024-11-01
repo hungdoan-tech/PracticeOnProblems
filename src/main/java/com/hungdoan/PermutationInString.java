@@ -57,11 +57,36 @@ public class PermutationInString {
         return true;
     }
 
+    public boolean checkInclusion2(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        if (n < m) return false;
+        int[] freq = new int[26];
+        int[] window = new int[26];
+        for (int i = 0; i < m; i++) {
+            freq[s1.charAt(i) - 'a']++;
+            window[s2.charAt(i) - 'a']++;
+        }
+        for (int i = m; i < n; i++) {
+            if (window[s2.charAt(i - m) - 'a'] == freq[s2.charAt(i - m) - 'a']
+                    && window[s2.charAt(i) - 'a'] == freq[s2.charAt(i) - 'a']
+                    && isPermutation(freq, window)) return true;
+            window[s2.charAt(i - m) - 'a']--;
+            window[s2.charAt(i) - 'a']++;
+        }
+        return isPermutation(freq, window);
+    }
+
+    private boolean isPermutation(int[] freq, int[] window) {
+        for (int i = 0; i < 26; i++) if (freq[i] != window[i]) return false;
+        return true;
+    }
+
     public static void main(String[] args) {
         PermutationInString instance = new PermutationInString();
 
-        System.out.println(instance.checkInclusion("ab", "eidboaoo")); // should return false
-        System.out.println(instance.checkInclusion("ab", "eidbaooo")); // should return true
-        System.out.println(instance.checkInclusion("adc", "dcda"));    // should return true
+        System.out.println(instance.checkInclusion2("ab", "eidboaoo")); // should return false
+        System.out.println(instance.checkInclusion2("ab", "eidbaooo")); // should return true
+        System.out.println(instance.checkInclusion2("adc", "dcda"));    // should return true
     }
 }
