@@ -29,6 +29,7 @@ package com.hungdoan;
 //
 //1 <= s.length <= 2 * 105
 //s consists only of printable ASCII characters.
+//https://en.wikipedia.org/wiki/Palindrome
 public class ValidPalindrome {
 
     public static void main(String[] args) {
