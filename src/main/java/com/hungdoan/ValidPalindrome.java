@@ -1,5 +1,7 @@
 package com.hungdoan;
 
+import java.util.Stack;
+
 //A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters,
 // it reads the same forward and backward. Alphanumeric characters include letters and numbers.
 //
@@ -88,6 +90,25 @@ public class ValidPalindrome {
         }
 
         return c1 == c2 || c1 == c2 + 32 || c1 == c2 - 32;
+    }
+
+    public boolean isPalindrome2(String input) {
+        Stack<Character> stack = new Stack<>();
+        int length = input.length();
+        
+        for (int i = 0; i < length / 2; i++) {
+            stack.push(input.charAt(i));
+        }
+
+        int startIndex = (length % 2 == 0) ? length / 2 : (length / 2) + 1;
+
+        for (int i = startIndex; i < length; i++) {
+            if (stack.isEmpty() || stack.pop() != input.charAt(i)) {
+                return false;
+            }
+        }
+
+        return stack.isEmpty();
     }
 }
 
