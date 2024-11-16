@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class AverageOfLevelsInBinaryTree {
+public class BinaryTreeLevelOrderTraversal {
 
-    public List<Double> averageOfLevels(TreeNode root) {
-        List<Double> averages = new ArrayList<>();
-        List<Integer> counts = new ArrayList<>();
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null) {
+            return new LinkedList<>();
+        }
+        List<List<Integer>> levelOrderTraversal = new LinkedList<>();
 
         Queue<Level> runners = new LinkedList<>();
         runners.offer(new Level(root, 0));
@@ -21,13 +23,11 @@ public class AverageOfLevelsInBinaryTree {
             TreeNode node = current.node;
             int level = current.level;
 
-            if (averages.size() <= level) {
-                averages.add(0.0);
-                counts.add(0);
+            if (levelOrderTraversal.size() <= level) {
+                levelOrderTraversal.add(new ArrayList<>());
             }
 
-            averages.set(level, averages.get(level) + node.val);
-            counts.set(level, counts.get(level) + 1);
+            levelOrderTraversal.get(level).add(node.val);
 
             if (node.left != null) {
                 runners.offer(new Level(node.left, level + 1));
@@ -37,11 +37,7 @@ public class AverageOfLevelsInBinaryTree {
             }
         }
 
-        for (int i = 0; i < averages.size(); i++) {
-            averages.set(i, averages.get(i) / counts.get(i));
-        }
-
-        return averages;
+        return levelOrderTraversal;
     }
 
     private static class Level {
